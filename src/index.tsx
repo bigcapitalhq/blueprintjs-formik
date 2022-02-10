@@ -5,10 +5,10 @@ import { Radio } from '@blueprintjs/core';
 // import reportWebVitals from './reportWebVitals';
 import { Formik, Form, FormikHelpers } from 'formik';
 import { InputGroup } from './InputGroup';
-import { FormGroup } from './FormGroup';
+import { FormGroup } from './core/FormGroup';
 
 import * as Yup from 'yup';
-import { Checkbox } from './Checkbox';
+import { Checkbox } from './core/Checkbox';
 import { RadioGroup } from './RadioGroup';
 
 interface Values {

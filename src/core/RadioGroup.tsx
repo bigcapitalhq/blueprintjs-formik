@@ -4,7 +4,7 @@ import {
   Radio as BPRadio,
   RadioGroup as BPRadioGroup,
 } from '@blueprintjs/core';
-import { Field } from './FieldBase';
+import { Field } from './core/FieldBase';
 
 export function fieldToRadioGroup({
   field: { onBlur: fieldOnBlur, ...field },

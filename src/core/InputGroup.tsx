@@ -2,7 +2,7 @@
 import React from 'react';
 import { getIn } from 'formik';
 import { InputGroup as BPInputGroup } from '@blueprintjs/core';
-import { Field } from './FieldBase';
+import { Field } from './core/FieldBase';
 
 function fieldToInputGroup({
   field: { onBlur: onFieldBlur, ...field },
