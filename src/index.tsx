@@ -1,25 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Radio } from '@blueprintjs/core';
 // import App from './App';
 // import reportWebVitals from './reportWebVitals';
 import { Formik, Form, FormikHelpers } from 'formik';
 import { InputGroup } from './InputGroup';
 import { FormGroup } from './FormGroup';
+
 import * as Yup from 'yup';
+import { Checkbox } from './Checkbox';
+import { RadioGroup } from './RadioGroup';
 
 interface Values {
   firstName: string;
   lastName: string;
   email: string;
 }
- 
+
 const SignupSchema = Yup.object().shape({
   email: Yup.string()
     .min(2, 'Too Short!')
     .max(50, 'Too Long!')
     .required('Required'),
 });
-
 
 ReactDOM.render(
   <React.StrictMode>
@@ -38,7 +41,16 @@ ReactDOM.render(
       >
         <Form>
           <FormGroup name={'email'} label={'EMail'}>
-            <InputGroup id={'email'} name={'email'} type="email" />
+            {/* <InputGroup id={'email'} name={'email'} type="email" />
+            <Checkbox id={'test'} name={'test'} /> */}
+
+            {/* <Checkbox id={'switch'} name={'switch'} /> */}
+
+            <RadioGroup id={'rad'} name={'rad'} label="Determine lunch">
+              <Radio label="Soup" value="one" /> 
+              <Radio label="Salad" value="two" />
+              <Radio label="Sandwich" value="three" />
+            </RadioGroup>
           </FormGroup>
 
           <button type="submit">Submit</button>
