@@ -20,7 +20,7 @@ export interface FieldToSwitchProps
 
 /**
  * Transformes the field props to switch props.
- * @param {FieldToSwitchProps}
+ * @param   {FieldToSwitchProps}
  * @returns {PBSwitchProps}
  */
 function fieldToSwitch({
@@ -47,7 +47,7 @@ function fieldToSwitch({
  * @param   {FieldToSwitchProps} props
  * @returns {React.JSX}
  */
-function FieldToSwitch(props: FieldToSwitchProps): React.JSX {
+function FieldToSwitch(props: FieldToSwitchProps): JSX.Element {
   return <BPSwitch {...fieldToSwitch(props)} />;
 }
 
@@ -56,6 +56,6 @@ function FieldToSwitch(props: FieldToSwitchProps): React.JSX {
  * @param   {SwitchProps}
  * @returns {React.JSX}
  */
-export function Switch({ ...props }: SwitchProps) {
+export function Switch({ ...props }: SwitchProps): JSX.Element {
   return <Field {...props} type={'checkbox'} component={FieldToSwitch} />;
 }

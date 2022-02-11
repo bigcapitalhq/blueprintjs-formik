@@ -37,7 +37,7 @@ const fieldToFormGroup = (
  * @param   {FormGroupProps}
  * @returns {React.JSX}
  */
-export function FormGroup({ children, ...props }: FormGroupProps): React.JSX {
+export function FormGroup({ children, ...props }: FormGroupProps): JSX.Element {
   const [field, meta] = useField(props.name);
 
   return (

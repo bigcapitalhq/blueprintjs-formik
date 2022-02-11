@@ -10,7 +10,11 @@ export interface FieldBaseProps extends FieldConfig, FastFieldConfig<any> {
   fastField?: boolean;
 }
 
-export function Field({ fastField, ...props }: FieldBaseProps) {
+/**
+ * Field.
+ * @param {FieldBaseProps}
+ */
+export function Field({ fastField, ...props }: FieldBaseProps): JSX.Element {
   return fastField ? (
     <FormikFastField {...props} />
   ) : (

@@ -44,20 +44,20 @@ function fieldToInputGroup({
 /**
  * Transformes field props to input group props.
  * @param   {FieldToInputProps} props -
- * @returns {React.JSX}
+ * @returns {JSX.Element}
  */
 function FieldToInputGroup({
   children,
   ...props
-}: FieldToInputProps): React.JSX {
+}: FieldToInputProps): JSX.Element {
   return <BPInputGroup {...fieldToInputGroup(props)} children={children} />;
 }
 
 /**
  * Input group Blueprint component binded with Formik.
  * @param   {InputGroupProps}
- * @returns {React.JSX}
+ * @returns {JSX.Element}
  */
-export function InputGroup({ ...props }: InputGroupProps) {
+export function InputGroup({ ...props }: InputGroupProps): JSX.Element {
   return <Field {...props} component={FieldToInputGroup} />;
 }
