@@ -1,17 +1,19 @@
 {
     "compilerOptions": {
       "target": "es5",
-      "module": "commonjs",
+      "module": "esnext",
+      "moduleResolution": "node",
       "lib": ["es2017", "es7", "es6", "dom"],
       "declaration": true,
-      "emitDeclarationOnly": true,
       "outDir": "dist",
       "strict": true,
       "esModuleInterop": true,
       "sourceMap": true,
       "jsx": "react",
-      "baseUrl": "src"
+      "baseUrl": "src",
+      "skipLibCheck": true
     },
-    "include": ["src"]
+    "include": ["src/core"],
+    "exclude": ["src/stories", "node_modules", ".storybook", "dist", "**/__tests__/**"]
   }
   

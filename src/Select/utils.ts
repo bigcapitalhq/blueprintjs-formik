@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { isFunction } from 'formik';
 import get from 'lodash.get';
 import keyBy from 'lodash.keyby';
