@@ -3,6 +3,7 @@ import { ComponentMeta } from '@storybook/react';
 import { Page } from './Page';
 import { NumericInputPage } from './NumericInputPage';
 import { SelectPage } from './SelectPage';
+import { MultiSelectPage } from './MultiSelectPage';
 
 export default {
   title: 'Example/Page',
@@ -16,6 +17,7 @@ export default {
 export const InputGroup = Page.bind({});
 export const NumericInput = NumericInputPage.bind({});
 export const Select = SelectPage.bind({});
+export const MultiSelect = MultiSelectPage.bind({});
 // export const LoggedIn = Template.bind({});
 
 // // More on interaction testing: https://storybook.js.org/docs/react/writing-tests/interaction-testing
