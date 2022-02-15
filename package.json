@@ -1,7 +1,6 @@
 {
   "name": "blueprint-formik",
   "version": "0.1.0",
-  "private": true,
   "typings": "dist/main.d.ts",
   "dependencies": {
     "@blueprintjs/core": "^3.52.0",
@@ -36,14 +35,16 @@
       "react-app",
       "react-app/jest"
     ],
-    "overrides": [{
-      "files": [
-        "**/*.stories.*"
-      ],
-      "rules": {
-        "import/no-anonymous-default-export": "off"
+    "overrides": [
+      {
+        "files": [
+          "**/*.stories.*"
+        ],
+        "rules": {
+          "import/no-anonymous-default-export": "off"
+        }
       }
-    }]
+    ]
   },
   "browserslist": {
     "production": [
@@ -77,5 +78,21 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "5.0.0"
-  }
+  },
+  "description": "Bindings for using Formik and Blueprint.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bigcapitalhq/blueprint-formik.git"
+  },
+  "keywords": [
+    "blueprintjs",
+    "formik",
+    "react"
+  ],
+  "author": "Ahmed Bouhuolia",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bigcapitalhq/blueprint-formik/issues"
+  },
+  "homepage": "https://github.com/bigcapitalhq/blueprint-formik#readme"
 }
