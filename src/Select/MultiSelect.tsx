@@ -5,6 +5,7 @@ import {
   IItemRendererProps,
 } from '@blueprintjs/select';
 import { Field } from 'formik';
+import { getAccessor, mapItemsById } from './utils';
 
 /**
  * Transforms multi-select to field.
