@@ -66,9 +66,14 @@ function FieldToMutliSelect({ ...props }): JSX.Element {
   const handleItemSelect = React.useCallback(
     (item, event: React.SyntheticEvent<HTMLElement>) => {
       const value = getAccessor(props.valueAccessor, item);
-      updateLocalAndField([...localSelected, value]);
+      const isSelected = isItemSelected(item);
+
+      if (isSelected) {
+      } else {
+        updateLocalAndField([...localSelected, value]);
+      }
     },
-    [localSelected, props.valueAccessor, updateLocalAndField]
+    [localSelected, props.valueAccessor, updateLocalAndField, isItemSelected]
   );
   // Handle item tag delete.
   const handleItemRemove = React.useCallback(
