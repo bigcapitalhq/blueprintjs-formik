@@ -1,10 +1,8 @@
 {
   "name": "blueprint-formik",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "typings": "dist/main.d.ts",
   "dependencies": {
-    "@blueprintjs/core": "^3.52.0",
-    "@blueprintjs/select": "^3.18.12",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
@@ -14,7 +12,6 @@
     "@types/node": "^17.0.14",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
-    "formik": "^2.2.9",
     "lodash.get": "^4.4.2",
     "lodash.keyby": "^4.6.0",
     "rollup": "^2.67.2",
@@ -35,16 +32,14 @@
       "react-app",
       "react-app/jest"
     ],
-    "overrides": [
-      {
-        "files": [
-          "**/*.stories.*"
-        ],
-        "rules": {
-          "import/no-anonymous-default-export": "off"
-        }
+    "overrides": [{
+      "files": [
+        "**/*.stories.*"
+      ],
+      "rules": {
+        "import/no-anonymous-default-export": "off"
       }
-    ]
+    }]
   },
   "browserslist": {
     "production": [
@@ -81,7 +76,10 @@
   "peerDependencies": {
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-scripts": "5.0.0"
+    "react-scripts": "5.0.0",
+    "@blueprintjs/core": "^3.52.0",
+    "@blueprintjs/select": "^3.18.12",
+    "formik": "^2.2.9"
   },
   "description": "Bindings for using Formik and Blueprint.js",
   "repository": {

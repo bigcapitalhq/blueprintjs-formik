@@ -5,7 +5,7 @@ const external = ['react'];
 
 const config = [
   {
-    input: 'src/core/index.ts',
+    input: 'src/index.ts',
     plugins: [
       typescript({
         tsconfig: 'tsconfig.json',
