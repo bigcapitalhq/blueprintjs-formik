@@ -58,7 +58,11 @@
       "last 1 safari version"
     ]
   },
+  "files": [
+    "dist"
+  ],
   "main": "dist/index.js",
+  "module": "./dist/esm/index.js",
   "devDependencies": {
     "@storybook/addon-actions": "^6.4.19",
     "@storybook/addon-essentials": "^6.4.19",
