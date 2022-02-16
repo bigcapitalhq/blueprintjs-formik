@@ -1,6 +1,6 @@
 {
   "name": "blueprint-formik",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "typings": "dist/main.d.ts",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.2",
