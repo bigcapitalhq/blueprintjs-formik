@@ -1,7 +1,7 @@
 import typescript from 'rollup-plugin-typescript2';
 import pkg from './package.json';
 
-const external = ['react', 'formik'];
+const external = ['react'];
 
 const config = [
   {
