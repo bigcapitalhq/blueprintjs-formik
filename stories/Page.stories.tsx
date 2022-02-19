@@ -5,6 +5,7 @@ import { NumericInputPage } from './NumericInputPage';
 import { SelectPage } from './SelectPage';
 import { MultiSelectPage } from './MultiSelectPage';
 import { SwitchPage } from './SwitchPage';
+import { RadioGroupPage } from './RadioGroupPage';
 
 export default {
   title: 'Example/Page',
@@ -20,6 +21,7 @@ export const NumericInput = NumericInputPage.bind({});
 export const Select = SelectPage.bind({});
 export const MultiSelect = MultiSelectPage.bind({});
 export const Switch = SwitchPage.bind({});
+export const RadioGroup = RadioGroupPage.bind({});
 
 // export const LoggedIn = Template.bind({});
 

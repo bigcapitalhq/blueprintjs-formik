@@ -1,36 +1,39 @@
-// @ts-nocheck
 import * as React from 'react';
+import { FieldConfig, FieldProps } from 'formik';
 import {
-  Radio as BPRadio,
   RadioGroup as BPRadioGroup,
+  RadioGroupProps as BPRadioGroupProps,
 } from '@blueprintjs/core';
 import { Field } from './FieldBase';
 
+export interface RadioGroupProps
+  extends BPRadioGroupProps,
+    Omit<FieldConfig, 'component'> {
+  name: string;
+}
+
+interface FieldToRadioGroupProps
+  extends FieldProps,
+    Omit<BPRadioGroupProps, 'onChange'> {
+  onChange?: (event: React.FormEvent<HTMLInputElement>) => void;
+}
+
 export function fieldToRadioGroup({
-  field: { onBlur: fieldOnBlur, ...field },
+  field: { onChange, ...field },
   form,
-  onBlur,
   ...props
-}) {
+}: FieldToRadioGroupProps): BPRadioGroupProps {
   return {
-    onBlur:
-      onBlur ??
-      function (e) {
-        fieldOnBlur(e ?? field.name);
-      },
-    ...field,
+    selectedValue: field.value,
+    onChange,
     ...props,
   };
 }
 
-export function FieldToRadioGroup(props) {
+export function FieldToRadioGroup(props: FieldToRadioGroupProps) {
   return <BPRadioGroup {...fieldToRadioGroup(props)} />;
 }
 
-export function RadioGroup(props) {
+export function RadioGroup(props: RadioGroupProps) {
   return <Field {...props} component={FieldToRadioGroup} />;
-}
-
-export function Radio(props) {
-  return <BPRadio {...props} checked={true} />;
 }
