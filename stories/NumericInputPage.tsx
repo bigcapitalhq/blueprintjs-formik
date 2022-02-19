@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 
 import { FormValues } from './FormValues';
 
-import { FormGroup, NumericInput } from '../core';
+import { FormGroup, NumericInput } from '../packages/core/src';
 
 const FormValidation = Yup.object().shape({
   firstName: Yup.string()

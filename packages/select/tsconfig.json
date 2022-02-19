@@ -13,7 +13,7 @@
       "baseUrl": "src",
       "skipLibCheck": true
     },
-    "include": ["packages/*/src", "stories"],
-    "exclude": ["node_modules", ".storybook", "dist", "**/__tests__/**"]
+    "include": ["src"],
+    "exclude": ["node_modules", "dist", "**/__tests__/**"]
   }
   

@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik, Form, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 
-import { FormGroup, InputGroup } from '../core';
+import { FormGroup, InputGroup } from '../packages/core/src';
 import { FormValues } from './FormValues';
 
 const FormValidation = Yup.object().shape({

@@ -5,8 +5,8 @@ import { MenuItem } from '@blueprintjs/core';
 import { ItemPredicate, ItemRenderer } from '@blueprintjs/select';
 import { FormValues } from './FormValues';
 
-import { FormGroup } from '../core';
-import { MultiSelect } from '../Select';
+import { FormGroup } from '../packages/core/src';
+import { Select } from '../packages/select/src';
 
 const FormValidation = Yup.object().shape({
   firstName: Yup.string()
@@ -16,7 +16,7 @@ const FormValidation = Yup.object().shape({
 });
 
 interface Values {
-  number: number[];
+  number: number;
 }
 
 interface IFilm {
@@ -61,13 +61,12 @@ export const filterFilm: ItemPredicate<IFilm> = (
 
 export const renderFilm: ItemRenderer<IFilm> = (
   film,
-  { handleClick, modifiers, query },
-  { isSelected }
+  { handleClick, modifiers, query }
 ) => {
   if (!modifiers.matchesPredicate) {
     return null;
   }
-  const text = `${film.title}.${isSelected ? 'selected' : 'not-selected'}`;
+  const text = `${film.title}`;
   return (
     <MenuItem
       active={modifiers.active}
@@ -86,15 +85,14 @@ const filmSelectProps = {
   items: TOP_100_FILMS,
   valueAccessor: (film: IFilm) => film.year,
   labelAccessor: (film: IFilm) => film.title,
-  tagRenderer: (film: IFilm) => film.title,
 };
 
-export const MultiSelectPage = () => {
+export const SelectPage = () => {
   return (
     <article>
       <Formik
         initialValues={{
-          number: [],
+          number: 1972,
         }}
         validationSchema={FormValidation}
         onSubmit={(
@@ -102,23 +100,16 @@ export const MultiSelectPage = () => {
           { setSubmitting }: FormikHelpers<Values>
         ) => {}}
       >
-        {({ values, setFieldValue }) => (
+        {({ values }) => (
           <Form>
             <FormGroup name={'number'} label={'Number'}>
-              <MultiSelect
+              <Select
                 items={TOP_100_FILMS}
                 name={'number'}
+                input={({ label }) => <button>{label}</button>}
                 {...filmSelectProps}
               />
             </FormGroup>
-
-            <button
-              onClick={() => {
-                setFieldValue('number', [1994]);
-              }}
-            >
-              Control from outside
-            </button>
 
             <button type="submit">Submit</button>
             <FormValues values={values} />

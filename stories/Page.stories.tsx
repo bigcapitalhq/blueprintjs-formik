@@ -4,6 +4,7 @@ import { Page } from './Page';
 import { NumericInputPage } from './NumericInputPage';
 import { SelectPage } from './SelectPage';
 import { MultiSelectPage } from './MultiSelectPage';
+import { SwitchPage } from './SwitchPage';
 
 export default {
   title: 'Example/Page',
@@ -18,6 +19,8 @@ export const InputGroup = Page.bind({});
 export const NumericInput = NumericInputPage.bind({});
 export const Select = SelectPage.bind({});
 export const MultiSelect = MultiSelectPage.bind({});
+export const Switch = SwitchPage.bind({});
+
 // export const LoggedIn = Template.bind({});
 
 // // More on interaction testing: https://storybook.js.org/docs/react/writing-tests/interaction-testing

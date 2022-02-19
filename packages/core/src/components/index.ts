@@ -5,3 +5,4 @@ export * from './InputGroup';
 export * from './RadioGroup';
 export * from './FormGroup';
 export * from './NumericInput';
+export * from './Switch';
