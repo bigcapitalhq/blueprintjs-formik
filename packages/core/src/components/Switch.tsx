@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { Switch as BPSwitch } from '@blueprintjs/core';
 import { Field } from './FieldBase';

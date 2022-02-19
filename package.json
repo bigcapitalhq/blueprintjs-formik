@@ -1,5 +1,5 @@
 {
-  "name": "blueprint-formik",
+  "name": "@blueprint-formik/monorepo",
   "version": "0.1.4",
   "typings": "dist/main.d.ts",
   "dependencies": {
