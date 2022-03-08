@@ -6,83 +6,33 @@ sidebar_position: 2
 
 Let's translate `docs/intro.md` to French.
 
-## Configure i18n
+Docusaurus can manage multiple versions of your docs.
 
-Modify `docusaurus.config.js` to add support for the `fr` locale:
+## Reference
 
-```js title="docusaurus.config.js"
-module.exports = {
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en', 'fr'],
-  },
-};
-```
+### Props
 
-## Translate a doc
+#### name
 
-Copy the `docs/intro.md` file to the `i18n/fr` folder:
+`name: string`
 
-```bash
-mkdir -p i18n/fr/docusaurus-plugin-content-docs/current/
+**Required** 
 
-cp docs/intro.md i18n/fr/docusaurus-plugin-content-docs/current/intro.md
-```
+A field's name in Formik state, to access nested objects or arrays, name can also accept the lodash-like dot like `social.facebook`.
 
-Translate `i18n/fr/docusaurus-plugin-content-docs/current/intro.md` in French.
 
-## Start your localized site
+#### valueAccessor
 
-Start your site on the French locale:
+#### labelAccessor
 
-```bash
-npm run start -- --locale fr
-```
+#### input
 
-Your localized site is accessible at `http://localhost:3000/fr/` and the `Getting Started` page is translated.
+#### onItemSelect
 
-:::caution
+#### onAfterItemSelect
 
-In development, you can only use one locale at a same time.
+#### onBeforeItemSelect
 
-:::
+---
 
-## Add a Locale Dropdown
-
-To navigate seamlessly across languages, add a locale dropdown.
-
-Modify the `docusaurus.config.js` file:
-
-```js title="docusaurus.config.js"
-module.exports = {
-  themeConfig: {
-    navbar: {
-      items: [
-        // highlight-start
-        {
-          type: 'localeDropdown',
-        },
-        // highlight-end
-      ],
-    },
-  },
-};
-```
-
-The locale dropdown now appears in your navbar:
-
-![Locale Dropdown](/img/tutorial/localeDropdown.png)
-
-## Build your localized site
-
-Build your site for a specific locale:
-
-```bash
-npm run build -- --locale fr
-```
-
-Or build your site to include all the locales at once:
-
-```bash
-npm run build
-```
+## Example
