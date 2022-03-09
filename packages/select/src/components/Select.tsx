@@ -10,6 +10,7 @@ import get from 'lodash.get';
 interface SelectProps
   extends Omit<FieldConfig, 'children' | 'as' | 'component'>,
     BPSelectProps<any> {
+  name: string;
   valueAccessor: string;
   labelAccessor: string;
   input: () => JSX.Element;
