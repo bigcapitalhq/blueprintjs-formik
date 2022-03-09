@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Select
 
-Blueprint [Select](https://blueprintjs.com/docs/#select/select-component) component binded with Formik [Field](https://formik.org/docs/api/field) component, holds the same Blueprint's select properties with additional props where it makes sense.
+PBlueprint [Select](https://blueprintjs.com/docs/#select/select-component) component binded with Formik [Field](https://formik.org/docs/api/field) component, holds the same Blueprint's select properties with additional props where it makes sense.
 
 `interface SelectProps extends Omit<FieldConfig, 'children' | 'as' | 'component'>, BPSelectProps`
 

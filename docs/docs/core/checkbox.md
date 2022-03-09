@@ -16,7 +16,7 @@ Blueprint [Checkbox](https://blueprintjs.com/docs/#core/components/checkbox) com
 
 `name: string`
 
-***Required***
+*Required*
 
 A field's name in Formik state, to access nested objects or arrays, name can also accept the lodash-like dot like `social.facebook`.
 
