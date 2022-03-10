@@ -16,16 +16,15 @@ PBlueprint [Select](https://blueprintjs.com/docs/#select/select-component) compo
 
 `name: string`
 
-*Required*
+_Required_
 
 A field's name in Formik state, to access nested objects or arrays, name can also accept the lodash-like dot like `social.facebook`.
-
 
 #### valueAccessor
 
 `name: string | (item: T): string|number`
 
-*Required*
+_Required_
 
 If a string is passed, the item's value will be looked up on the original item via that key, eg. If your accessor is `firstName` then its value would be read from item['firstName'].
 
@@ -35,7 +34,7 @@ If a function is passed, the column's value will be looked up on the original it
 
 `name: string | (item: T): string|number`
 
-*Required*
+_Required_
 
 If a string is passed, the item's value will be looked up on the original item via that key, eg. If your accessor is `firstName` then its value would be read from item['firstName'].
 
@@ -61,6 +60,14 @@ Callback invoked after the selected item set to the formik values. gives ability
 
 Callback invoked before the selected item is set to the formik values. gives ability to write extra logic without overriding the `onItemSelect` property.
 
+#### fastField
+
+`fastField: boolean`
+
+Switches to use `<FastField />` Formik component instead of the regular `Field` component, FastField is an optimized for performance to be used on large forms (~30+ fields) or when a field has very expensive reandering requirements. [Read more](https://formik.org/docs/api/fastfield) about FastField on Formik documentation.
+
 ---
 
 ## Example
+
+The following example demonstrates how to use binded `Select` component with Formik.

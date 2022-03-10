@@ -59,6 +59,12 @@ Callback invoked after the selected item set to the formik values. gives ability
 
 Callback invoked before the selected item is set to the formik values. gives ability to write extra logic without overriding the `onItemSelect` property.
 
+#### fastField
+
+`fastField: boolean`
+
+Switches to use `<FastField />` Formik component instead of the regular `Field` component, FastField is an optimized for performance to be used on large forms (~30+ fields) or when a field has very expensive reandering requirements. [Read more](https://formik.org/docs/api/fastfield) about FastField on Formik documentation.
+
 ---
 
 ## Example
