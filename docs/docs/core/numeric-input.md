@@ -6,7 +6,7 @@ sidebar_position: 3
 
 Blueprint [Numeric Input](https://blueprintjs.com/docs/#core/components/numeric-input) component controlled and binded to Formik Field component. Holds the same original component properties with extra following properties.
 
-`export interface NumericInputProps extends Omit<FieldConfig, 'children' | 'component'>, Omit<BPNumericInputProps, 'value'>`
+`interface NumericInputProps extends Omit<FieldConfig, 'children' | 'component'>, Omit<BPNumericInputProps, 'value'>`
 
 ## Reference
 

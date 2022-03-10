@@ -4,6 +4,8 @@ sidebar_position: 1
 
 # Form Group
 
+`interface FormGroupProps extends BPFormGroupProps`
+
 ## Reference
 
 ### Props

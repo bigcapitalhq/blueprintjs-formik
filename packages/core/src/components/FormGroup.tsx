@@ -1,12 +1,12 @@
 import React from 'react';
 import { FieldMetaProps, FieldInputProps, useField } from 'formik';
 import {
-  FormGroup as PBFormGroup,
+  FormGroup as BPFormGroup,
   Intent,
-  FormGroupProps as PBFormGroupProps,
+  FormGroupProps as BPFormGroupProps,
 } from '@blueprintjs/core';
 
-export interface FormGroupProps extends PBFormGroupProps {
+export interface FormGroupProps extends BPFormGroupProps {
   name: string;
   children: React.ReactElement;
 }
@@ -22,7 +22,7 @@ const fieldToFormGroup = (
   props: Omit<FormGroupProps, 'children'>,
   field: FieldInputProps<any>,
   meta: FieldMetaProps<any>
-): PBFormGroupProps => {
+): BPFormGroupProps => {
   const showError = meta.touched && meta.error;
 
   return {
@@ -41,7 +41,7 @@ export function FormGroup({ children, ...props }: FormGroupProps): JSX.Element {
   const [field, meta] = useField(props.name);
 
   return (
-    <PBFormGroup
+    <BPFormGroup
       {...fieldToFormGroup(props, field, meta)}
       children={children}
     />

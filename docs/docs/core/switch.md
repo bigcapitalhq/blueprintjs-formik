@@ -6,7 +6,7 @@ sidebar_position: 6
 
 Blueprint [Switch](https://blueprintjs.com/docs/#core/components/switch) component controlled and binded to Formik Field component. Holds the same original component properties with extra following properties.
 
-`export interface NumericInputProps extends Omit<FieldConfig, 'children' | 'component'>, Omit<BPNumericInputProps, 'value'>`
+`interface NumericInputProps extends Omit<FieldConfig, 'children' | 'component'>, Omit<BPNumericInputProps, 'value'>`
 
 ## Reference
 
