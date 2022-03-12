@@ -8,7 +8,7 @@ import {
 import { Field } from './FieldBase';
 
 interface InputGroupProps
-  extends Omit<FieldConfig, 'children'>,
+  extends Omit<FieldConfig, 'children' | 'component' | 'as'>,
     Omit<PBInputGroupProps2, 'value' | 'name'> {}
 
 export interface FieldToInputProps

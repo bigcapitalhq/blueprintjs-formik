@@ -1,12 +1,12 @@
 ---
-sidebar_position: 6
+sidebar_position: 8
 ---
 
-# Switch
+# HTML Select
 
-Blueprint [Switch](https://blueprintjs.com/docs/#core/components/switch) component controlled and binded to Formik Field component. Holds the same original component properties with extra following properties.
+Blueprint [HTMLSelect](https://blueprintjs.com/docs/#core/components/text-inputs.text-area) component controlled and binded to Formik Field component. Holds the same original component properties with extra following properties.
 
-`interface NumericInputProps extends Omit<FieldConfig, 'children' | 'component'>, Omit<BPNumericInputProps, 'value'>`
+`interface TextAreaProps extends Omit<FieldConfig, 'children' | 'component' | 'as'>, HTMLSelectProps`
 
 ## Reference
 
@@ -35,17 +35,17 @@ The following example demonstrates how to use binded Switch component with Formi
 ```jsx
 import React from 'react';
 import { Formik, Form, FormikHelpers } from 'formik';
-import { Switch } from '../packages/core/src';
+import { HTMLSelect } from '../packages/core/src';
 
 interface Values {
-  enabled: boolean;
+  selectOption: string;
 }
 
-export const SwitchExample = () => {
+export const HTMLSelectExample = () => {
   return (
     <Formik
       initialValues={{
-        enabled: true,
+        selectOption: 'orange',
       }}
       onSubmit={(
         values: Values,
@@ -53,8 +53,8 @@ export const SwitchExample = () => {
       ) => {}}
     >
       <Form>
-        <FormGroup name={'number'} label={'Number'}>
-          <Switch name={'enabled'} />
+        <FormGroup name={'selectedOption'} label={'Select option...'}>
+          <HTMLSelect name={'selectedOption'} options={['apply', 'orange']} />
         </FormGroup>
 
         <button type="submit">Submit</button>

@@ -6,6 +6,9 @@ import { SelectPage } from './SelectPage';
 import { MultiSelectPage } from './MultiSelectPage';
 import { SwitchPage } from './SwitchPage';
 import { RadioGroupPage } from './RadioGroupPage';
+import { TextAreaPage } from './TextAreaPage';
+import { SliderPage } from './SliderPage';
+import { HTMLSelectPage } from './HTMLSelectPage';
 
 export default {
   title: 'Example/Page',
@@ -22,6 +25,9 @@ export const Select = SelectPage.bind({});
 export const MultiSelect = MultiSelectPage.bind({});
 export const Switch = SwitchPage.bind({});
 export const RadioGroup = RadioGroupPage.bind({});
+export const TextArea = TextAreaPage.bind({});
+export const Slider = SliderPage.bind({});
+export const HTMLSelect = HTMLSelectPage.bind({});
 
 // export const LoggedIn = Template.bind({});
 

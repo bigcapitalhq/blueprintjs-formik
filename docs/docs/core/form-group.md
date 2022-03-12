@@ -46,7 +46,7 @@ interface Values {
   lastName: string;
 }
 
-export const Page = () => {
+export const FormGroupExample = () => {
   return (
     <article>
       <Formik
