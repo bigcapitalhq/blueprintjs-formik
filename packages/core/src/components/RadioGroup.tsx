@@ -18,6 +18,11 @@ interface FieldToRadioGroupProps
   onChange?: (event: React.FormEvent<HTMLInputElement>) => void;
 }
 
+/**
+ * Transformes the field props to radio group component.
+ * @param   {FieldToRadioGroupProps}
+ * @returns {BPRadioGroupProps}
+ */
 export function fieldToRadioGroup({
   field: { onChange, ...field },
   form,
@@ -30,10 +35,20 @@ export function fieldToRadioGroup({
   };
 }
 
-export function FieldToRadioGroup(props: FieldToRadioGroupProps) {
+/**
+ * Transformes the field props to radio group component.
+ * @param   {FieldToRadioGroupProps}
+ * @returns {JSX.Element}
+ */
+export function FieldToRadioGroup(props: FieldToRadioGroupProps): JSX.Element {
   return <BPRadioGroup {...fieldToRadioGroup(props)} />;
 }
 
-export function RadioGroup(props: RadioGroupProps) {
+/**
+ * Radio group wrap BP component to bind with Formik.
+ * @param   {RadioGroupProps}
+ * @returns {JSX.Element}
+ */
+export function RadioGroup(props: RadioGroupProps): JSX.Element {
   return <Field {...props} component={FieldToRadioGroup} />;
 }
