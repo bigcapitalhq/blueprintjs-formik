@@ -4,10 +4,6 @@ sidebar_position: 2
 
 # MultiSelect
 
-Let's translate `docs/intro.md` to French.
-
-Docusaurus can manage multiple versions of your docs.
-
 ## Reference
 
 ### Props
@@ -16,28 +12,27 @@ Docusaurus can manage multiple versions of your docs.
 
 `name: string`
 
-*Required*
+_Required_
 
 A field's name in Formik state, to access nested objects or arrays, name can also accept the lodash-like dot like `social.facebook`.
-
 
 #### valueAccessor
 
 `name: string | (item: T): string|number`
 
-*Required*
+_Required_
 
 #### labelAccessor
 
 `name: string | (item: T): string|number`
 
-*Required*
+_Required_
 
 #### input
 
 `input: React.ReactNode`
 
-*Required*
+_Required_
 
 #### onItemSelect
 

@@ -6,7 +6,7 @@ sidebar_position: 5
 
 Blueprint [Checkbox](https://blueprintjs.com/docs/#core/components/checkbox) component controlled and binded to Formik Field component. Holds the same original component properties with extra following properties.
 
-`interface InputGroupProps extends Omit<FieldConfig, 'children'>, Omit<PBInputGroupProps2, 'value' | 'name'>`
+`interface CheckboxProps extends BPCheckboxProps, Omit<FieldConfig, 'children' | 'component' | 'as' | 'type' | 'value'>`
 
 ## Reference
 
@@ -23,3 +23,5 @@ A field's name in Formik state, to access nested objects or arrays, name can als
 ---
 
 ## Example
+
+The following example demonstrates how to use binded Radio Group component with Formik.

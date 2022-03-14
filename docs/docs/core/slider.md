@@ -6,7 +6,7 @@ sidebar_position: 8
 
 Blueprint [Slider](https://blueprintjs.com/docs/#core/components/sliders) component controlled and binded to Formik Field component. Holds the same original component properties with extra following properties.
 
-`interface NumericInputProps extends Omit<FieldConfig, 'children' | 'component'>, Omit<BPNumericInputProps, 'value'>`
+`interface SliderProps extends BPSliderProps, Omit<FieldConfig, 'component' | 'as' | 'value'>`
 
 ## Reference
 
