@@ -8,14 +8,14 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
   title: 'Formik Blueprint',
   tagline: 'Binds Blueprint.js components with Formik.',
-  url: 'https://your-docusaurus-test-site.com',
-  baseUrl: '/',
+  url: 'https://bigcapitalhq.github.io/blueprintjs-formik',
+  baseUrl: '/blueprintjs-formik/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
-
+  organizationName: 'bigcapitalhq', // Usually your GitHub org/user name.
+  projectName: 'blueprintjs-formik', // Usually your repo name.
+  deploymentBranch: 'docs',
   presets: [
     [
       'classic',
