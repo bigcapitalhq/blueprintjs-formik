@@ -15,9 +15,9 @@ function HomepageHeader() {
         <p className="hero__subtitle">{siteConfig.tagline}</p>
         <p className={'hero__desc'}>
           Blueprint.js and Formik are highly popular libraries which are often
-          use togther, it's very diffecult to transfer and intergrate components
+          use togther, it's very difficult to transfer and intergrate components
           between them when develop forms using both. The purpose of this
-          library provide bindings components to intergrate Blueprint components
+          library provide bindings components to integrate Blueprint components
           with Formik.
         </p>
 
