@@ -9,6 +9,7 @@ import { RadioGroupPage } from './RadioGroupPage';
 import { TextAreaPage } from './TextAreaPage';
 import { SliderPage } from './SliderPage';
 import { HTMLSelectPage } from './HTMLSelectPage';
+import { EditableTextPage } from './EditableTextPage';
 
 export default {
   title: 'Example/Page',
@@ -28,6 +29,7 @@ export const RadioGroup = RadioGroupPage.bind({});
 export const TextArea = TextAreaPage.bind({});
 export const Slider = SliderPage.bind({});
 export const HTMLSelect = HTMLSelectPage.bind({});
+export const EditableText = EditableTextPage.bind({});
 
 // export const LoggedIn = Template.bind({});
 

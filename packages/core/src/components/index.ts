@@ -8,3 +8,4 @@ export * from './Switch';
 export * from './Textarea';
 export * from './Slider';
 export * from './HTMLSelect';
+export * from './EditableText';
