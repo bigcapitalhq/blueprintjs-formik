@@ -1,18 +1,21 @@
 import React from 'react';
 import { FieldConfig, FieldProps } from 'formik';
-import { HTMLSelect as BPHTMLSelect, HTMLSelectProps } from '@blueprintjs/core';
+import {
+  HTMLSelect as BPHTMLSelect,
+  HTMLSelectProps as BPHTMLSelectProps,
+} from '@blueprintjs/core';
 import { Field } from './FieldBase';
 
-export interface TextAreaProps
+export interface HTMLSelectProps
   extends Omit<FieldConfig, 'children' | 'component' | 'as'>,
-    HTMLSelectProps {
+    BPHTMLSelectProps {
   name: string;
   value: string | number;
 }
 
 interface FieldToTextAreaProps
   extends FieldProps,
-    Omit<HTMLSelectProps, 'form'> {}
+    Omit<BPHTMLSelectProps, 'form'> {}
 
 /**
  * Transformes the field props to `HTMLSelect` props.
@@ -48,6 +51,6 @@ function FieldToHTMLSelect({
  * @param   {TextAreaProps} props -
  * @returns {JSX.Element}
  */
-export function HTMLSelect({ ...props }: TextAreaProps): JSX.Element {
+export function HTMLSelect({ ...props }: HTMLSelectProps): JSX.Element {
   return <Field {...props} component={FieldToHTMLSelect} />;
 }
