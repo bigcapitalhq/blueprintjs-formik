@@ -21,7 +21,7 @@ export const SliderPage = () => {
     <article>
       <Formik
         initialValues={{
-          longText: 0.3,
+          longText: 3,
         }}
         validationSchema={FormValidation}
         onSubmit={(

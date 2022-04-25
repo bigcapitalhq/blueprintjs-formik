@@ -2,6 +2,9 @@ import React from 'react';
 import { Formik, Form, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 
+import "normalize.css";
+import "@blueprintjs/core/lib/css/blueprint.css";
+
 import { FormGroup, InputGroup } from '../packages/core/src';
 import { FormValues } from './FormValues';
 

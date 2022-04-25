@@ -20,7 +20,7 @@ interface SliderToFieldProps extends FieldProps, BPSliderProps {}
  */
 function fieldToSlider({
   field: { onBlur: onFieldBlur, ...field },
-  form: { touched, errors },
+  form: { setFieldValue, touched, errors },
   ...props
 }: SliderToFieldProps): SliderProps {
   const fieldError = getIn(errors, field.name);
@@ -29,6 +29,9 @@ function fieldToSlider({
   return {
     intent: showError ? Intent.DANGER : Intent.NONE,
     ...field,
+    onChange: (value: number) => {
+      setFieldValue(field.name, value);
+    },
     ...props,
   };
 }
