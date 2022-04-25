@@ -24,13 +24,18 @@ interface FieldToRadioGroupProps
  * @returns {BPRadioGroupProps}
  */
 export function fieldToRadioGroup({
-  field: { onChange, ...field },
+  field,
   form,
+  onChange,
   ...props
 }: FieldToRadioGroupProps): BPRadioGroupProps {
   return {
     selectedValue: field.value,
-    onChange,
+    onChange:
+      onChange ??
+      function (event: React.FormEvent<HTMLInputElement>) {
+        form.setFieldValue(field.name, event.currentTarget.value);
+      },
     ...props,
   };
 }
