@@ -7,9 +7,10 @@ import {
 import { Field } from './FieldBase';
 
 export interface RadioGroupProps
-  extends BPRadioGroupProps,
+  extends Omit<BPRadioGroupProps, 'onChange'>,
     Omit<FieldConfig, 'component'> {
   name: string;
+  onChange?: (event: React.FormEvent<HTMLInputElement>) => void;
 }
 
 interface FieldToRadioGroupProps
