@@ -2,8 +2,9 @@ import React from 'react';
 import { Formik, Form, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 
-import { FormGroup, InputGroup } from '../packages/core/src';
 import { FormValues } from './FormValues';
+import { FormGroup } from '../packages/core/src';
+import { DateInput } from '../packages/datetime/src';
 
 const FormValidation = Yup.object().shape({
   firstName: Yup.string()
@@ -13,15 +14,15 @@ const FormValidation = Yup.object().shape({
 });
 
 interface Values {
-  name: string;
+  longText: string;
 }
 
-export const Page = () => {
+export function DateInputPage() {
   return (
     <article>
       <Formik
         initialValues={{
-          name: '',
+          // longText: '4/26/2022',
         }}
         validationSchema={FormValidation}
         onSubmit={(
@@ -31,12 +32,13 @@ export const Page = () => {
       >
         {({ values }) => (
           <Form>
-            <FormGroup name={'firstName'} label={'First name'}>
-              <InputGroup name={'firstName'} />
-            </FormGroup>
-
-            <FormGroup name={'lastName'} label={'Last name'}>
-              <InputGroup name={'lastName'} />
+            <FormGroup name={'longText'} label={'Number'}>
+              <DateInput
+                name={'longText'}
+                parseDate={(str) => new Date(str)}
+                placeholder={'M/D/YYYY'}
+                formatDate={(date) => date.toLocaleString()}
+              />
             </FormGroup>
 
             <button type="submit">Submit</button>
@@ -46,4 +48,4 @@ export const Page = () => {
       </Formik>
     </article>
   );
-};
+}
