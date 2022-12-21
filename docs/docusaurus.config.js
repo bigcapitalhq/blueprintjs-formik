@@ -53,7 +53,7 @@ const config = {
             label: 'Docs',
           },
           {
-            href: 'https://github.com/facebook/docusaurus',
+            href: 'https://github.com/bigcapitalhq/blueprintjs-formik',
             label: 'GitHub',
             position: 'right',
           },
