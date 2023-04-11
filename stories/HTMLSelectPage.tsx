@@ -6,14 +6,12 @@ import { FormGroup, HTMLSelect } from '../packages/core/src';
 import { FormValues } from './FormValues';
 
 const FormValidation = Yup.object().shape({
-  longText: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('Required'),
+  value: Yup.string().required('Required'),
 });
 
 interface Values {
-  longText: string;
+  value: string;
+  anotherValue: string;
 }
 
 export const HTMLSelectPage = () => {
@@ -21,7 +19,8 @@ export const HTMLSelectPage = () => {
     <article>
       <Formik
         initialValues={{
-          longText: 'mohamed',
+          value: 'mohamed',
+          anotherValue: 'jesus',
         }}
         validationSchema={FormValidation}
         onSubmit={(
@@ -31,8 +30,27 @@ export const HTMLSelectPage = () => {
       >
         {({ values }) => (
           <Form>
-            <FormGroup name={'longText'} label={'Long text'}>
-              <HTMLSelect name={'longText'} options={['ahmed', 'mohamed']} />
+            <FormGroup name={'value'} label={'Long text'}>
+              <HTMLSelect name={'value'} options={['mohamed', 'jesus']} />
+            </FormGroup>
+
+            <FormGroup
+              name={'anotherValue'}
+              label={'Another value/label options'}
+            >
+              <HTMLSelect
+                name={'anotherValue'}
+                options={[
+                  {
+                    value: 'mohamed',
+                    label: 'Mohamed',
+                  },
+                  {
+                    value: 'jesus',
+                    label: 'Jesus',
+                  },
+                ]}
+              />
             </FormGroup>
 
             <button type="submit">Submit</button>

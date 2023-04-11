@@ -10,7 +10,7 @@ export interface HTMLSelectProps
   extends Omit<FieldConfig, 'children' | 'component' | 'as'>,
     BPHTMLSelectProps {
   name: string;
-  value: string | number;
+  value?: string | number;
 }
 
 interface FieldToTextAreaProps

@@ -1,8 +1,6 @@
 import React from 'react';
 import { Formik, Form, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
-import { MenuItem } from '@blueprintjs/core';
-import { ItemPredicate, ItemRenderer } from '@blueprintjs/select';
 import { FormValues } from './FormValues';
 
 import { FormGroup } from '../packages/core/src';
@@ -39,56 +37,6 @@ export const TOP_100_FILMS: IFilm[] = [
   { title: 'Star Wars: Episode V - The Empire Strikes Back', year: 1980 },
 ];
 
-export const filterFilm: ItemPredicate<IFilm> = (
-  query,
-  film,
-  _index,
-  exactMatch
-) => {
-  const normalizedTitle = film.title.toLowerCase();
-  const normalizedQuery = query.toLowerCase();
-
-  if (exactMatch) {
-    return normalizedTitle === normalizedQuery;
-  } else {
-    return (
-      `${film.rank}. ${normalizedTitle} ${film.year}`.indexOf(
-        normalizedQuery
-      ) >= 0
-    );
-  }
-};
-
-export const renderFilm: ItemRenderer<IFilm> = (
-  film,
-  { handleClick, modifiers, query },
-  { isSelected }
-) => {
-  if (!modifiers.matchesPredicate) {
-    return null;
-  }
-  const text = `${film.title}.${isSelected ? 'selected' : 'not-selected'}`;
-  return (
-    <MenuItem
-      active={modifiers.active}
-      disabled={modifiers.disabled}
-      label={film.year.toString()}
-      key={film.year}
-      onClick={handleClick}
-      text={text}
-    />
-  );
-};
-
-const filmSelectProps = {
-  itemPredicate: filterFilm,
-  itemRenderer: renderFilm,
-  items: TOP_100_FILMS,
-  valueAccessor: (film: IFilm) => film.year,
-  labelAccessor: (film: IFilm) => film.title,
-  tagRenderer: (film: IFilm) => film.title,
-};
-
 export const MultiSelectPage = () => {
   return (
     <article>
@@ -108,7 +56,9 @@ export const MultiSelectPage = () => {
               <MultiSelect
                 items={TOP_100_FILMS}
                 name={'number'}
-                {...filmSelectProps}
+                valueAccessor={(film: IFilm) => film.year}
+                labelAccessor={(film: IFilm) => film.title}
+                tagRenderer={(film: IFilm) => film.title}
               />
             </FormGroup>
 

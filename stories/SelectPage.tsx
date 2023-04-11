@@ -1,8 +1,6 @@
 import React from 'react';
 import { Formik, Form, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
-import { MenuItem } from '@blueprintjs/core';
-import { ItemPredicate, ItemRenderer } from '@blueprintjs/select';
 import { FormValues } from './FormValues';
 
 import { FormGroup } from '../packages/core/src';
@@ -24,7 +22,7 @@ interface IFilm {
   year: number;
 }
 /** Top 100 films as rated by IMDb users. http://www.imdb.com/chart/top */
-export const TOP_100_FILMS: IFilm[] = [
+const TOP_100_FILMS: IFilm[] = [
   { title: 'The Shawshank Redemption', year: 1994 },
   { title: 'The Godfather', year: 1972 },
   { title: 'The Godfather: Part II', year: 1974 },
@@ -38,54 +36,6 @@ export const TOP_100_FILMS: IFilm[] = [
   { title: 'The Lord of the Rings: The Fellowship of the Ring', year: 2001 },
   { title: 'Star Wars: Episode V - The Empire Strikes Back', year: 1980 },
 ];
-
-export const filterFilm: ItemPredicate<IFilm> = (
-  query,
-  film,
-  _index,
-  exactMatch
-) => {
-  const normalizedTitle = film.title.toLowerCase();
-  const normalizedQuery = query.toLowerCase();
-
-  if (exactMatch) {
-    return normalizedTitle === normalizedQuery;
-  } else {
-    return (
-      `${film.rank}. ${normalizedTitle} ${film.year}`.indexOf(
-        normalizedQuery
-      ) >= 0
-    );
-  }
-};
-
-export const renderFilm: ItemRenderer<IFilm> = (
-  film,
-  { handleClick, modifiers, query }
-) => {
-  if (!modifiers.matchesPredicate) {
-    return null;
-  }
-  const text = `${film.title}`;
-  return (
-    <MenuItem
-      active={modifiers.active}
-      disabled={modifiers.disabled}
-      label={film.year.toString()}
-      key={film.year}
-      onClick={handleClick}
-      text={text}
-    />
-  );
-};
-
-const filmSelectProps = {
-  itemPredicate: filterFilm,
-  itemRenderer: renderFilm,
-  items: TOP_100_FILMS,
-  valueAccessor: (film: IFilm) => film.year,
-  labelAccessor: (film: IFilm) => film.title,
-};
 
 export const SelectPage = () => {
   return (
@@ -103,11 +53,13 @@ export const SelectPage = () => {
         {({ values }) => (
           <Form>
             <FormGroup name={'number'} label={'Number'}>
-              <Select
+              <Select<IFilm>
                 items={TOP_100_FILMS}
                 name={'number'}
-                input={({ label }) => <button>{label}</button>}
-                {...filmSelectProps}
+                input={({ text }) => <button>{text}</button>}
+                valueAccessor={'year'}
+                labelAccessor={'year'}
+                textAccessor={'title'}
               />
             </FormGroup>
 
