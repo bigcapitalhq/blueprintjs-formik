@@ -1,6 +1,6 @@
 {
   "name": "@blueprintjs-formik/select",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "typings": "dist/main.d.ts",
   "dependencies": {
     "lodash.get": "^4.4.2",
