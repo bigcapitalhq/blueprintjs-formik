@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import { FormValues } from './FormValues';
 
 import { FormGroup } from '../packages/core/src';
-import { Select } from '../packages/select/src';
+import { Select, SelectOptionProps } from '../packages/select/src';
 
 const FormValidation = Yup.object().shape({
   firstName: Yup.string()
@@ -17,7 +17,7 @@ interface Values {
   number: number;
 }
 
-interface IFilm {
+interface IFilm extends SelectOptionProps {
   title: string;
   year: number;
 }
@@ -53,7 +53,7 @@ export const SelectPage = () => {
         {({ values }) => (
           <Form>
             <FormGroup name={'number'} label={'Number'}>
-              <Select<IFilm>
+              <Select
                 items={TOP_100_FILMS}
                 name={'number'}
                 input={({ text }) => <button>{text}</button>}

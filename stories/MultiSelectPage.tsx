@@ -2,9 +2,8 @@ import React from 'react';
 import { Formik, Form, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { FormValues } from './FormValues';
-
 import { FormGroup } from '../packages/core/src';
-import { MultiSelect } from '../packages/select/src';
+import { MultiSelect, SelectOptionProps } from '../packages/select/src';
 
 const FormValidation = Yup.object().shape({
   firstName: Yup.string()
@@ -17,7 +16,7 @@ interface Values {
   number: number[];
 }
 
-interface IFilm {
+interface IFilm extends SelectOptionProps {
   title: string;
   year: number;
 }
@@ -56,9 +55,9 @@ export const MultiSelectPage = () => {
               <MultiSelect
                 items={TOP_100_FILMS}
                 name={'number'}
-                valueAccessor={(film: IFilm) => film.year}
-                labelAccessor={(film: IFilm) => film.title}
-                tagRenderer={(film: IFilm) => film.title}
+                valueAccessor={'year'}
+                textAccessor={'title'}
+                tagAccessor={'title'}
               />
             </FormGroup>
 
