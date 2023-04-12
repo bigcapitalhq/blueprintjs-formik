@@ -1,18 +1,16 @@
-import React from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import {
   MultiSelect as BPMultiSelect,
   MultiSelectProps as BPMultiSelectProps,
   IItemRendererProps,
   ItemPredicate,
-  ItemRenderer,
 } from '@blueprintjs/select';
 import { Field, FieldConfig, FieldProps } from 'formik';
 import { getAccessor, mapItemsById } from './utils';
 import { MenuItem } from '@blueprintjs/core';
 
 // # Types -------------------
-
-interface CommonMultiSelectItem {
+export interface CommonMultiSelectItem {
   /** Whether this option is non-interactive. */
   disabled?: boolean;
 
@@ -24,7 +22,6 @@ interface CommonMultiSelectItem {
 
   text?: string;
 }
-
 interface FormikItemRendererState {
   isSelected: boolean;
 }
@@ -49,6 +46,7 @@ interface FormikMultiSelectExtraProps<T> {
   valueAccessor?: string;
   labelAccessor?: string;
   textAccessor?: string;
+  tagAccessor?: string;
 }
 interface MultiSelectProps<T>
   extends FormikMultiSelectProps<T>,
@@ -85,21 +83,26 @@ function transformMutliSelectToField<T extends CommonMultiSelectItem>({
 function FieldToMutliSelect<T extends CommonMultiSelectItem>({
   ...props
 }: FieldToMultiSelectProps<T>): JSX.Element {
-  const { valueAccessor, labelAccessor, textAccessor } = props;
+  const {
+    valueAccessor = 'value',
+    labelAccessor = 'label',
+    textAccessor = 'text',
+    tagAccessor = 'text',
+  } = props;
 
   // Local selected values.
-  const [localSelected, setLocalSelected] = React.useState<(string | number)[]>(
+  const [localSelected, setLocalSelected] = useState<(string | number)[]>(
     props.field.value
   );
   // Sync the field value with the local selected state.
-  React.useEffect(() => {
+  useEffect(() => {
     if (props.field.value && localSelected) {
       setLocalSelected(props.field.value);
     }
   }, [props.field.value, localSelected]);
 
   // Updates the local selected state and the formik field.
-  const updateLocalAndField = React.useCallback(
+  const updateLocalAndField = useCallback(
     (newLocalSelected) => {
       props.form.setFieldValue(props.field.name, newLocalSelected);
       setLocalSelected(newLocalSelected);
@@ -108,22 +111,22 @@ function FieldToMutliSelect<T extends CommonMultiSelectItem>({
   );
 
   // Items by value.
-  const itemsByValue = React.useMemo<{ [key: string | number]: any }>(
-    () => mapItemsById(props.items, props.valueAccessor),
-    [props.items, props.valueAccessor]
+  const itemsByValue = useMemo<{ [key: string | number]: any }>(
+    () => mapItemsById(props.items, valueAccessor),
+    [props.items, valueAccessor]
   );
   // Detarmines whether the given item is selected.
-  const isItemSelected = React.useCallback(
+  const isItemSelected = useCallback(
     (item) => {
-      const value = getAccessor(props.valueAccessor, item);
+      const value = getAccessor(valueAccessor, item);
       return localSelected.some((i) => i === value);
     },
-    [localSelected, props.valueAccessor]
+    [localSelected, valueAccessor]
   );
   // Handles item select.
-  const handleItemSelect = React.useCallback(
+  const handleItemSelect = useCallback(
     (item: T) => {
-      const value = getAccessor(props.valueAccessor, item);
+      const value = getAccessor(valueAccessor, item);
       const isSelected = isItemSelected(item);
 
       if (isSelected) {
@@ -131,31 +134,31 @@ function FieldToMutliSelect<T extends CommonMultiSelectItem>({
         updateLocalAndField([...localSelected, value]);
       }
     },
-    [localSelected, props.valueAccessor, updateLocalAndField, isItemSelected]
+    [localSelected, valueAccessor, updateLocalAndField, isItemSelected]
   );
   // Handle item tag delete.
-  const handleItemRemove = React.useCallback(
+  const handleItemRemove = useCallback(
     (deleteItem: T, index: number) => {
       const newLocalSelected = localSelected.filter(
-        (item) => item !== getAccessor(props.valueAccessor, deleteItem)
+        (item) => item !== getAccessor(valueAccessor, deleteItem)
       );
       updateLocalAndField(newLocalSelected);
     },
-    [localSelected, props.valueAccessor, updateLocalAndField]
+    [localSelected, valueAccessor, updateLocalAndField]
   );
   // Computed the selected items from selected ids.
-  const selectedItems = React.useMemo(() => {
+  const selectedItems = useMemo(() => {
     return localSelected
       .filter((value) => itemsByValue[value])
       .map((value) => itemsByValue[value]);
   }, [localSelected, itemsByValue]);
 
   // Default item renderer.
-  const defaultItemRenderer = React.useCallback(
+  const defaultItemRenderer = useCallback(
     (
       item: T,
       { handleClick, modifiers, query }: IItemRendererProps,
-      { isSelected }: { isSelected: boolean }
+      { isSelected }: FormikItemRendererState
     ) => {
       if (!modifiers.matchesPredicate) {
         return null;
@@ -172,14 +175,14 @@ function FieldToMutliSelect<T extends CommonMultiSelectItem>({
           key={value}
           onClick={handleClick}
           text={text}
+          icon={isSelected ? 'tick' : 'blank'}
         />
       );
     },
     [labelAccessor, textAccessor, valueAccessor]
   );
-
   // Override `itemRenderer` to add extra properties.
-  const localItemRenderer = React.useCallback(
+  const localItemRenderer = useCallback(
     (item: any, itemProps: IItemRendererProps) => {
       const isSelected = isItemSelected(item);
 
@@ -205,7 +208,7 @@ function FieldToMutliSelect<T extends CommonMultiSelectItem>({
     }
   };
   // Tag value mapper.
-  const tagRenderer = (item: T) => getAccessor(textAccessor, item);
+  const tagRenderer = (item: T) => getAccessor(tagAccessor, item);
 
   return (
     <BPMultiSelect<T>
