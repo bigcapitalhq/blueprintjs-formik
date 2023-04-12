@@ -8,5 +8,5 @@ export interface SelectOptionProps {
   text?: string;
 
   /** Value of this option. */
-  value: string | number;
+  value?: string | number;
 }
