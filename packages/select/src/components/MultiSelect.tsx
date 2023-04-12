@@ -8,20 +8,9 @@ import {
 import { Field, FieldConfig, FieldProps } from 'formik';
 import { getAccessor, mapItemsById } from './utils';
 import { MenuItem } from '@blueprintjs/core';
+import { SelectOptionProps } from './types';
 
 // # Types -------------------
-export interface CommonMultiSelectItem {
-  /** Whether this option is non-interactive. */
-  disabled?: boolean;
-
-  /** Label text for this option. If omitted, `value` is used as the label. */
-  label?: string;
-
-  /** Value of this option. */
-  value: string | number;
-
-  text?: string;
-}
 interface FormikItemRendererState {
   isSelected: boolean;
 }
@@ -63,7 +52,7 @@ interface FieldToMultiSelectProps<T>
 /**
  * Transforms multi-select to field.
  */
-function transformMutliSelectToField<T extends CommonMultiSelectItem>({
+function transformMutliSelectToField<T extends SelectOptionProps>({
   field: { onBlur: onFieldBlur, ...field },
   form: { touched, errors, ...form },
   meta,
@@ -80,7 +69,7 @@ function transformMutliSelectToField<T extends CommonMultiSelectItem>({
 /**
  * Binds formik field to multi-select blueprint field.
  */
-function FieldToMutliSelect<T extends CommonMultiSelectItem>({
+function FieldToMutliSelect<T extends SelectOptionProps>({
   ...props
 }: FieldToMultiSelectProps<T>): JSX.Element {
   const {
@@ -228,7 +217,7 @@ function FieldToMutliSelect<T extends CommonMultiSelectItem>({
  * @param {MultiSelectProps<T>} props
  * @returns {JSX.Element}
  */
-export function MultiSelect<T extends CommonMultiSelectItem>({
+export function MultiSelect<T extends SelectOptionProps>({
   ...props
 }: MultiSelectProps<T>) {
   return <Field {...props} component={FieldToMutliSelect} />;

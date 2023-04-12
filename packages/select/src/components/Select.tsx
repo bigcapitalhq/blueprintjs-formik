@@ -8,21 +8,9 @@ import {
 } from '@blueprintjs/select';
 import { MenuItem } from '@blueprintjs/core';
 import { Field, FieldProps, FieldConfig, isFunction } from 'formik';
+import { SelectOptionProps } from './types';
 
 // # Types -----------------
-export interface CommonSelectItem {
-  /** Whether this option is non-interactive. */
-  disabled?: boolean;
-
-  /** Label text for this option. If omitted, `value` is used as the label. */
-  label?: string;
-
-  /** Value of this option. */
-  value: string | number;
-
-  /** Text for this option. */
-  text?: string;
-}
 interface FormikSelectProps<T>
   extends Omit<BPSelectProps<T>, 'itemRenderer' | 'onItemSelect'> {
   itemRenderer?: ItemRenderer<T>;
@@ -67,7 +55,7 @@ const getAccessor = (accessor: any, activeItem: any) => {
  * @param {FieldToSelectProps}
  * @returns {BPSelectProps<any> }
  */
-function transformSelectToFieldProps<T extends CommonSelectItem>({
+function transformSelectToFieldProps<T extends SelectOptionProps>({
   field: { onBlur: onFieldBlur, ...field },
   form: { touched, errors, ...form },
   meta,
@@ -148,7 +136,7 @@ function transformSelectToFieldProps<T extends CommonSelectItem>({
  * @param {FieldToSelectProps}
  * @returns {JSX.Element}
  */
-function FieldToSelect<T extends CommonSelectItem>({
+function FieldToSelect<T extends SelectOptionProps>({
   ...props
 }: FieldToSelectProps<T>): JSX.Element {
   return <BPSelect<T> {...transformSelectToFieldProps<T>(props)} />;
@@ -159,7 +147,7 @@ function FieldToSelect<T extends CommonSelectItem>({
  * @param {JSX.Element}
  * @returns {SelectProps}
  */
-export function Select<T extends CommonSelectItem>({
+export function Select<T extends SelectOptionProps>({
   ...props
 }: SelectProps<T>): JSX.Element {
   return <Field {...props} component={FieldToSelect} />;
