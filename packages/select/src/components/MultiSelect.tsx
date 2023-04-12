@@ -1,12 +1,12 @@
-// @ts-nocheck
 import React from 'react';
 import {
   MultiSelect as BPMultiSelect,
+  MultiSelectProps as BPMultiSelectProps,
   IItemRendererProps,
   ItemPredicate,
   ItemRenderer,
 } from '@blueprintjs/select';
-import { Field } from 'formik';
+import { Field, FieldConfig, FieldProps } from 'formik';
 import { getAccessor, mapItemsById } from './utils';
 import { MenuItem } from '@blueprintjs/core';
 
@@ -25,79 +25,70 @@ interface CommonMultiSelectItem {
   text?: string;
 }
 
-// # Utils -------------------
-const CommonMultiSelect = BPMultiSelect.ofType<CommonMultiSelectItem>();
+interface FormikItemRendererState {
+  isSelected: boolean;
+}
+type FormikItemRenderer<T> = (
+  item: T,
+  itemProps: IItemRendererProps,
+  { isSelected }: FormikItemRendererState
+) => JSX.Element | null;
 
+interface FormikMultiSelectProps<T>
+  extends Omit<
+      BPMultiSelectProps<T>,
+      'itemRenderer' | 'onItemSelect' | 'selectedItems' | 'tagRenderer'
+    >,
+    FormikMultiSelectExtraProps<T> {
+  itemRenderer?: FormikItemRenderer<T>;
+  onItemSelect?: (item: T, event?: React.SyntheticEvent<HTMLElement>) => void;
+  selectedItems?: T[];
+  tagRenderer?: (item: T) => React.ReactNode;
+}
+interface FormikMultiSelectExtraProps<T> {
+  valueAccessor?: string;
+  labelAccessor?: string;
+  textAccessor?: string;
+}
+interface MultiSelectProps<T>
+  extends FormikMultiSelectProps<T>,
+    Omit<FieldConfig, 'children' | 'as' | 'component'> {
+  name: string;
+}
+interface FieldToMultiSelectProps<T>
+  extends FormikMultiSelectProps<T>,
+    FieldProps {
+  children: React.ReactNode;
+}
+
+// # Utils -------------------
 /**
  * Transforms multi-select to field.
- * @param {}
- * @returns {}
  */
-function transformMutliSelectToField({
+function transformMutliSelectToField<T extends CommonMultiSelectItem>({
   field: { onBlur: onFieldBlur, ...field },
   form: { touched, errors, ...form },
   meta,
-  input,
   valueAccessor,
   labelAccessor,
   ...props
-}) {
-  const _valueAccessor = valueAccessor || 'value';
-  const _labelAccessor = labelAccessor || 'label';
-  const _textAccessor = textAccessor || 'text';
-
-  const itemPredicate: ItemPredicate<CommonMultiSelectItem> = (
-    query,
-    film,
-    _index,
-    exactMatch
-  ) => {
-    const normalizedTitle = film.title.toLowerCase();
-    const normalizedQuery = query.toLowerCase();
-
-    if (exactMatch) {
-      return normalizedTitle === normalizedQuery;
-    } else {
-      return (
-        `${film.rank}. ${normalizedTitle} ${film.year}`.indexOf(
-          normalizedQuery
-        ) >= 0
-      );
-    }
-  };
-
-  const itemRenderer: ItemRenderer<CommonMultiSelectItem> = (
-    film,
-    { handleClick, modifiers, query },
-    { isSelected }
-  ) => {
-    if (!modifiers.matchesPredicate) {
-      return null;
-    }
-    const text = `${film.title}.${isSelected ? 'selected' : 'not-selected'}`;
-    return (
-      <MenuItem
-        active={modifiers.active}
-        disabled={modifiers.disabled}
-        label={film.year.toString()}
-        key={film.year}
-        onClick={handleClick}
-        text={text}
-      />
-    );
-  };
-
+}: FieldToMultiSelectProps<T>): FormikMultiSelectProps<T> & {
+  children: React.ReactNode;
+} {
   return props;
 }
 
 // # Components -------------------
 /**
  * Binds formik field to multi-select blueprint field.
- * @returns {JSX.Element}
  */
-function FieldToMutliSelect({ ...props }): JSX.Element {
+function FieldToMutliSelect<T extends CommonMultiSelectItem>({
+  ...props
+}: FieldToMultiSelectProps<T>): JSX.Element {
+  const { valueAccessor, labelAccessor, textAccessor } = props;
+
   // Local selected values.
-  const [localSelected, setLocalSelected] = React.useState<string | number[]>(
+  const [localSelected, setLocalSelected] = React.useState<(string | number)[]>(
     props.field.value
   );
   // Sync the field value with the local selected state.
@@ -131,7 +122,7 @@ function FieldToMutliSelect({ ...props }): JSX.Element {
   );
   // Handles item select.
   const handleItemSelect = React.useCallback(
-    (item, event: React.SyntheticEvent<HTMLElement>) => {
+    (item: T) => {
       const value = getAccessor(props.valueAccessor, item);
       const isSelected = isItemSelected(item);
 
@@ -144,7 +135,7 @@ function FieldToMutliSelect({ ...props }): JSX.Element {
   );
   // Handle item tag delete.
   const handleItemRemove = React.useCallback(
-    (deleteItem: any, index: number) => {
+    (deleteItem: T, index: number) => {
       const newLocalSelected = localSelected.filter(
         (item) => item !== getAccessor(props.valueAccessor, deleteItem)
       );
@@ -159,20 +150,70 @@ function FieldToMutliSelect({ ...props }): JSX.Element {
       .map((value) => itemsByValue[value]);
   }, [localSelected, itemsByValue]);
 
+  // Default item renderer.
+  const defaultItemRenderer = React.useCallback(
+    (
+      item: T,
+      { handleClick, modifiers, query }: IItemRendererProps,
+      { isSelected }: { isSelected: boolean }
+    ) => {
+      if (!modifiers.matchesPredicate) {
+        return null;
+      }
+      const label = getAccessor(labelAccessor, item);
+      const text = getAccessor(textAccessor, item);
+      const value = getAccessor(valueAccessor, item);
+
+      return (
+        <MenuItem
+          active={modifiers.active}
+          disabled={modifiers.disabled}
+          label={label}
+          key={value}
+          onClick={handleClick}
+          text={text}
+        />
+      );
+    },
+    [labelAccessor, textAccessor, valueAccessor]
+  );
+
   // Override `itemRenderer` to add extra properties.
   const localItemRenderer = React.useCallback(
     (item: any, itemProps: IItemRendererProps) => {
       const isSelected = isItemSelected(item);
-      return props.itemRenderer(item, itemProps, { isSelected });
+
+      return props.itemRenderer
+        ? props.itemRenderer(item, itemProps, { isSelected })
+        : defaultItemRenderer(item, itemProps, { isSelected });
     },
-    [isItemSelected, props]
+    [defaultItemRenderer, isItemSelected, props]
   );
+  // Item predicator for searching.
+  const itemPredicate: ItemPredicate<T> = (query, item, _index, exactMatch) => {
+    const normalizedTitle = item.label?.toLowerCase();
+    const normalizedQuery = query.toLowerCase();
+
+    if (exactMatch) {
+      return normalizedTitle === normalizedQuery;
+    } else {
+      return (
+        `${item.label} ${normalizedTitle} ${item.text}`.indexOf(
+          normalizedQuery
+        ) >= 0
+      );
+    }
+  };
+  // Tag value mapper.
+  const tagRenderer = (item: T) => getAccessor(textAccessor, item);
 
   return (
-    <CommonMultiSelect
+    <BPMultiSelect<T>
       selectedItems={selectedItems}
       onItemSelect={handleItemSelect}
       onRemove={handleItemRemove}
+      itemPredicate={itemPredicate}
+      tagRenderer={tagRenderer}
       {...transformMutliSelectToField(props)}
       itemRenderer={localItemRenderer}
     />
@@ -180,10 +221,12 @@ function FieldToMutliSelect({ ...props }): JSX.Element {
 }
 
 /**
- *
- * @param
+ * Multi select binded with Formik.
+ * @param {MultiSelectProps<T>} props
  * @returns {JSX.Element}
  */
-export function MultiSelect({ ...props }) {
+export function MultiSelect<T extends CommonMultiSelectItem>({
+  ...props
+}: MultiSelectProps<T>) {
   return <Field {...props} component={FieldToMutliSelect} />;
 }
