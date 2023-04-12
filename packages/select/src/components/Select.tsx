@@ -10,7 +10,7 @@ import { MenuItem } from '@blueprintjs/core';
 import { Field, FieldProps, FieldConfig, isFunction } from 'formik';
 
 // # Types -----------------
-interface CommonSelectItem {
+export interface CommonSelectItem {
   /** Whether this option is non-interactive. */
   disabled?: boolean;
 
@@ -23,9 +23,14 @@ interface CommonSelectItem {
   /** Text for this option. */
   text?: string;
 }
+interface FormikSelectProps<T>
+  extends Omit<BPSelectProps<T>, 'itemRenderer' | 'onItemSelect'> {
+  itemRenderer?: ItemRenderer<T>;
+  onItemSelect?: (item: T, event?: React.SyntheticEvent<HTMLElement>) => void;
+}
 interface SelectProps<T>
   extends Omit<FieldConfig, 'children' | 'as' | 'component'>,
-    BPSelectProps<T> {
+    FormikSelectProps<T> {
   name: string;
   valueAccessor?: string;
   labelAccessor?: string;
@@ -37,10 +42,7 @@ interface SelectProps<T>
     value: string | number;
   }) => React.ReactNode;
 }
-interface FieldToSelectProps<T>
-  extends Omit<BPSelectProps<T>, 'onItemSelect' | 'itemRenderer'>,
-    FieldProps {
-  onItemSelect?: (item: T, event?: React.SyntheticEvent<HTMLElement>) => void;
+interface FieldToSelectProps<T> extends FormikSelectProps<T>, FieldProps {
   valueAccessor: string;
   labelAccessor: string;
   textAccessor: string;
@@ -51,7 +53,6 @@ interface FieldToSelectProps<T>
     value: string | number;
   }) => JSX.Element;
   children: React.ReactNode;
-  itemRenderer?: ItemRenderer<T>;
 }
 
 // # Utils -----------------
@@ -93,12 +94,7 @@ function transformSelectToFieldProps<T extends CommonSelectItem>({
       })
     : props.children;
 
-  const itemPredicate: ItemPredicate<T> = (
-    query,
-    item,
-    _index,
-    exactMatch
-  ) => {
+  const itemPredicate: ItemPredicate<T> = (query, item, _index, exactMatch) => {
     const label = getAccessor(_labelAccessor, item);
     const normalizedLabel =
       'string' === typeof label ? label?.toLowerCase() : '';
@@ -152,7 +148,9 @@ function transformSelectToFieldProps<T extends CommonSelectItem>({
  * @param {FieldToSelectProps}
  * @returns {JSX.Element}
  */
-function FieldToSelect<T extends CommonSelectItem>({ ...props }: FieldToSelectProps<T>): JSX.Element {
+function FieldToSelect<T extends CommonSelectItem>({
+  ...props
+}: FieldToSelectProps<T>): JSX.Element {
   return <BPSelect<T> {...transformSelectToFieldProps<T>(props)} />;
 }
 
@@ -161,6 +159,8 @@ function FieldToSelect<T extends CommonSelectItem>({ ...props }: FieldToSelectPr
  * @param {JSX.Element}
  * @returns {SelectProps}
  */
-export function Select<T extends CommonSelectItem>({ ...props }: SelectProps<T>): JSX.Element {
-  return <Field {...props} component={FieldToSelect<T>} />;
+export function Select<T extends CommonSelectItem>({
+  ...props
+}: SelectProps<T>): JSX.Element {
+  return <Field {...props} component={FieldToSelect} />;
 }
