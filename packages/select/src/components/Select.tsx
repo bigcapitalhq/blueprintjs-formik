@@ -95,15 +95,15 @@ function transformSelectToFieldProps<T extends CommonSelectItem>({
     : props.children;
 
   const itemPredicate: ItemPredicate<T> = (query, item, _index, exactMatch) => {
+    const text = getAccessor(_textAccessor, item);
     const label = getAccessor(_labelAccessor, item);
-    const normalizedLabel =
-      'string' === typeof label ? label?.toLowerCase() : '';
+    const normalizedText = 'string' === typeof text ? text?.toLowerCase() : '';
     const normalizedQuery = query.toLowerCase();
 
     if (exactMatch) {
-      return normalizedLabel === normalizedQuery;
+      return normalizedText === normalizedQuery;
     } else {
-      return `${normalizedLabel} ${label}`.indexOf(normalizedQuery) >= 0;
+      return `${normalizedText} ${label}`.indexOf(normalizedQuery) >= 0;
     }
   };
   const itemRenderer: ItemRenderer<T> = (
