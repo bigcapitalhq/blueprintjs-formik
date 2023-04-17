@@ -56,7 +56,6 @@ export const SelectPage = () => {
               <Select
                 items={TOP_100_FILMS}
                 name={'number'}
-                input={({ text }) => <button>{text}</button>}
                 valueAccessor={'year'}
                 labelAccessor={'year'}
                 textAccessor={'title'}

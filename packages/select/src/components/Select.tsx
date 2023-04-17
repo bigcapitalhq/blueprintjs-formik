@@ -1,6 +1,10 @@
 import React from 'react';
 import get from 'lodash.get';
 import {
+  Button as BPButton,
+  ButtonProps as BPButtonProps,
+} from '@blueprintjs/core';
+import {
   Select as BPSelect,
   SelectProps as BPSelectProps,
   ItemPredicate,
@@ -15,6 +19,14 @@ interface FormikSelectProps<T>
   extends Omit<BPSelectProps<T>, 'itemRenderer' | 'onItemSelect'> {
   itemRenderer?: ItemRenderer<T>;
   onItemSelect?: (item: T, event?: React.SyntheticEvent<HTMLElement>) => void;
+  input?: (props: {
+    activeItem: T;
+    label: string;
+    text: string;
+    value: string | number;
+  }) => React.ReactNode;
+  placeholder?: string;
+  buttonProps?: Partial<BPButtonProps>;
 }
 interface SelectProps<T>
   extends Omit<FieldConfig, 'children' | 'as' | 'component'>,
@@ -23,12 +35,6 @@ interface SelectProps<T>
   valueAccessor?: string;
   labelAccessor?: string;
   textAccessor?: string;
-  input: (props: {
-    activeItem: T;
-    label: string;
-    text: string;
-    value: string | number;
-  }) => React.ReactNode;
 }
 interface FieldToSelectProps<T> extends FormikSelectProps<T>, FieldProps {
   valueAccessor: string;
@@ -60,6 +66,8 @@ function transformSelectToFieldProps<T extends SelectOptionProps>({
   form: { touched, errors, ...form },
   meta,
   input,
+  buttonProps,
+  placeholder,
   valueAccessor,
   labelAccessor,
   textAccessor,
@@ -73,15 +81,25 @@ function transformSelectToFieldProps<T extends SelectOptionProps>({
     (item) => getAccessor(_valueAccessor, item) === field.value
   ) as T;
 
-  const children = input
-    ? input({
-        activeItem,
-        text: getAccessor(_textAccessor, activeItem),
-        label: getAccessor(_labelAccessor, activeItem),
-        value: getAccessor(_valueAccessor, activeItem),
-      })
-    : props.children;
+  const activeItemText = getAccessor(_textAccessor, activeItem);
+  const activeItemLabel = getAccessor(_labelAccessor, activeItem);
+  const activeItemValue = getAccessor(_valueAccessor, activeItem);
 
+  const children = input ? (
+    input({
+      activeItem,
+      text: activeItemText,
+      label: activeItemLabel,
+      value: activeItemValue,
+    })
+  ) : (
+    <BPButton
+      text={activeItemText}
+      rightIcon="double-caret-vertical"
+      placeholder={placeholder || 'Select an item...'}
+      {...buttonProps}
+    />
+  );
   const itemPredicate: ItemPredicate<T> = (query, item, _index, exactMatch) => {
     const text = getAccessor(_textAccessor, item);
     const label = getAccessor(_labelAccessor, item);
