@@ -36,6 +36,11 @@ interface FormikMultiSelectExtraProps<T> {
   labelAccessor?: string;
   textAccessor?: string;
   tagAccessor?: string;
+  noResultsText?: string;
+  onCreateItemSelect?: (
+    item: T,
+    event?: React.SyntheticEvent<HTMLElement>
+  ) => void;
 }
 interface MultiSelectProps<T>
   extends FormikMultiSelectProps<T>,
@@ -77,6 +82,8 @@ function FieldToMutliSelect<T extends SelectOptionProps>({
     labelAccessor = 'label',
     textAccessor = 'text',
     tagAccessor = 'text',
+    noResultsText,
+    onCreateItemSelect,
   } = props;
 
   // Local selected values.
@@ -114,16 +121,23 @@ function FieldToMutliSelect<T extends SelectOptionProps>({
   );
   // Handles item select.
   const handleItemSelect = useCallback(
-    (item: T) => {
+    (item: T, event?: React.SyntheticEvent<HTMLElement>) => {
       const value = getAccessor(valueAccessor, item);
       const isSelected = isItemSelected(item);
 
-      if (isSelected) {
-      } else {
+      if (typeof value === 'undefined') {
+        onCreateItemSelect && onCreateItemSelect(item, event);
+      } else if (!isSelected) {
         updateLocalAndField([...localSelected, value]);
       }
     },
-    [localSelected, valueAccessor, updateLocalAndField, isItemSelected]
+    [
+      localSelected,
+      valueAccessor,
+      updateLocalAndField,
+      isItemSelected,
+      onCreateItemSelect,
+    ]
   );
   // Handle item tag delete.
   const handleItemRemove = useCallback(
@@ -199,6 +213,10 @@ function FieldToMutliSelect<T extends SelectOptionProps>({
   // Tag value mapper.
   const tagRenderer = (item: T) => getAccessor(tagAccessor, item);
 
+  const noResults = (
+    <MenuItem disabled={true} text={noResultsText || 'No results.'} />
+  );
+
   return (
     <BPMultiSelect<T>
       selectedItems={selectedItems}
@@ -206,6 +224,7 @@ function FieldToMutliSelect<T extends SelectOptionProps>({
       onRemove={handleItemRemove}
       itemPredicate={itemPredicate}
       tagRenderer={tagRenderer}
+      noResults={noResults}
       {...transformMutliSelectToField(props)}
       itemRenderer={localItemRenderer}
     />
