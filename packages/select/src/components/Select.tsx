@@ -3,6 +3,7 @@ import get from 'lodash.get';
 import {
   Button as BPButton,
   ButtonProps as BPButtonProps,
+  MenuItem,
 } from '@blueprintjs/core';
 import {
   Select as BPSelect,
@@ -10,9 +11,9 @@ import {
   ItemPredicate,
   ItemRenderer,
 } from '@blueprintjs/select';
-import { MenuItem } from '@blueprintjs/core';
-import { Field, FieldProps, FieldConfig, isFunction } from 'formik';
+import { Field, FieldProps, FieldConfig } from 'formik';
 import { SelectOptionProps } from './types';
+import { getAccessor } from './utils';
 
 // # Types -----------------
 interface FormikSelectProps<T>
@@ -53,13 +54,6 @@ interface FieldToSelectProps<T> extends FormikSelectProps<T>, FieldProps {
   }) => JSX.Element;
   children: React.ReactNode;
 }
-
-// # Utils -----------------
-const getAccessor = (accessor: any, activeItem: any) => {
-  return isFunction(accessor)
-    ? accessor(activeItem)
-    : get(activeItem, accessor);
-};
 
 /**
  * Transform field props to select props.

@@ -5,9 +5,9 @@ import {
   IItemRendererProps,
   ItemPredicate,
 } from '@blueprintjs/select';
+import { MenuItem } from '@blueprintjs/core';
 import { Field, FieldConfig, FieldProps } from 'formik';
 import { getAccessor, mapItemsById } from './utils';
-import { MenuItem } from '@blueprintjs/core';
 import { SelectOptionProps } from './types';
 
 // # Types -------------------
