@@ -19,12 +19,17 @@ interface FormikSelectProps<T>
   extends Omit<BPSelectProps<T>, 'itemRenderer' | 'onItemSelect'> {
   itemRenderer?: ItemRenderer<T>;
   onItemSelect?: (item: T, event?: React.SyntheticEvent<HTMLElement>) => void;
+  onCreateItemSelect?: (
+    item: T,
+    event?: React.SyntheticEvent<HTMLElement>
+  ) => void;
   input?: (props: {
     activeItem: T;
     label: string;
     text: string;
     value: string | number;
   }) => React.ReactNode;
+  noResultsText?: string;
   placeholder?: string;
   buttonProps?: Partial<BPButtonProps>;
 }
@@ -71,6 +76,8 @@ function transformSelectToFieldProps<T extends SelectOptionProps>({
   valueAccessor,
   labelAccessor,
   textAccessor,
+  onCreateItemSelect,
+  noResultsText,
   ...props
 }: FieldToSelectProps<T>): BPSelectProps<T> & { children: React.ReactNode } {
   const _valueAccessor = valueAccessor || 'value';
@@ -134,15 +141,25 @@ function transformSelectToFieldProps<T extends SelectOptionProps>({
       />
     );
   };
+  const onItemSelect = (item: T, event?: React.SyntheticEvent<HTMLElement>) => {
+    const value = getAccessor(_valueAccessor, item);
+
+    if ('undefined' !== typeof value) {
+      form.setFieldValue(field.name, value);
+    } else {
+      onCreateItemSelect && onCreateItemSelect(item, event);
+    }
+  };
+  const noResults = (
+    <MenuItem disabled={true} text={noResultsText || 'No results.'} />
+  );
 
   return {
-    onItemSelect: (item: T) => {
-      const value = getAccessor(_valueAccessor, item);
-      form.setFieldValue(field.name, value);
-    },
+    onItemSelect,
     activeItem,
     itemPredicate,
     itemRenderer,
+    noResults,
     ...props,
     children,
   };
