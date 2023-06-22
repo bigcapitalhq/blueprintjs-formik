@@ -1,7 +1,6 @@
 {
   "name": "@blueprintjs-formik/core",
   "version": "0.3.2",
-  "typings": "dist/main.d.ts",
   "dependencies": {
     "lodash.get": "^4.4.2",
     "lodash.keyby": "^4.6.0",
@@ -31,11 +30,10 @@
       "last 1 safari version"
     ]
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "main": "dist/index.js",
   "module": "./dist/esm/index.js",
+  "typings": "./dist/index.d.ts",
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.2",

@@ -25,7 +25,7 @@ npm install @blueprintjs-formik/select
 - Getting going quickly to develop sophisticated forms with Blueprintjs components and Formik.
 - All bindings components written using TS and all interfaces exported.
 
-## Changlog 
+## Changlog
 
 Please see CHANGELOG for more information on what has changed recently.
 
@@ -33,5 +33,6 @@ Please see CHANGELOG for more information on what has changed recently.
 
 Please see CONTRIBUTING for details.
 
----- 
+---
+
 Made by [Bigcapital.ly](https://bigcapital.ly), [Ahmed Bouhuolia](https://twitter.com)

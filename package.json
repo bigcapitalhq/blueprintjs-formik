@@ -1,13 +1,32 @@
 {
-  "name": "@blueprint-formik/monorepo",
-  "version": "0.4.0",
-  "typings": "dist/main.d.ts",
+  "name": "@blueprintjs-formik/monorepo",
+  "description": "Bindings for using Formik and Blueprint.js",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bigcapitalhq/blueprint-formik.git"
+  },
+  "keywords": [
+    "blueprintjs",
+    "formik",
+    "react"
+  ],
+  "author": "Ahmed Bouhuolia",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bigcapitalhq/blueprint-formik/issues"
+  },
+  "homepage": "https://github.com/bigcapitalhq/blueprint-formik#readme",
   "dependencies": {
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "5.0.0",
     "@blueprintjs/core": "^3.52.0",
     "@blueprintjs/select": "^3.18.12",
+    "@blueprintjs/datetime": "^3.24.1",
     "formik": "^2.2.9",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.2",
@@ -28,44 +47,12 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "typecheck": "tsc",
-    "build": "cross-env NODE_ENV=production tsc --noEmit --project ./tsconfig.json && rollup -c",
+    "bootstrap": "lerna exec npm install",
+    "build": "lerna run build",
+    "typecheck": "lerna run typecheck",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ],
-    "overrides": [
-      {
-        "files": [
-          "**/*.stories.*"
-        ],
-        "rules": {
-          "import/no-anonymous-default-export": "off"
-        }
-      }
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "files": [
-    "dist"
-  ],
-  "main": "dist/index.js",
-  "module": "./dist/esm/index.js",
   "devDependencies": {
     "@storybook/addon-actions": "^6.4.19",
     "@storybook/addon-essentials": "^6.4.19",
@@ -79,22 +66,7 @@
     "@storybook/testing-library": "0.0.9",
     "@types/styled-components": "^5.1.22",
     "cross-env": "^7.0.3",
+    "lerna": "^7.0.2",
     "webpack": "^5.68.0"
-  },
-  "description": "Bindings for using Formik and Blueprint.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/bigcapitalhq/blueprint-formik.git"
-  },
-  "keywords": [
-    "blueprintjs",
-    "formik",
-    "react"
-  ],
-  "author": "Ahmed Bouhuolia",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/bigcapitalhq/blueprint-formik/issues"
-  },
-  "homepage": "https://github.com/bigcapitalhq/blueprint-formik#readme"
+  }
 }
