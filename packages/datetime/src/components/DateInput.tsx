@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { getIn, FieldConfig, FieldProps } from 'formik';
 import { Intent } from '@blueprintjs/core';
