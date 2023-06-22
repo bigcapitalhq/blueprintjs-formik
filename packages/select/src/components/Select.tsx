@@ -112,10 +112,7 @@ function transformSelectToFieldProps<T extends SelectOptionProps>({
       return `${normalizedText} ${label}`.indexOf(normalizedQuery) >= 0;
     }
   };
-  const itemRenderer: ItemRenderer<T> = (
-    item,
-    { handleClick, modifiers, query }
-  ) => {
+  const itemRenderer: ItemRenderer<T> = (item, { handleClick, modifiers }) => {
     if (!modifiers.matchesPredicate) {
       return null;
     }
@@ -127,9 +124,9 @@ function transformSelectToFieldProps<T extends SelectOptionProps>({
       <MenuItem
         active={modifiers.active}
         disabled={modifiers.disabled}
-        label={`${label}`}
+        label={label}
         key={value}
-        text={`${text}`}
+        text={text}
         onClick={handleClick}
       />
     );
