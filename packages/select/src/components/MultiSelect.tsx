@@ -67,7 +67,16 @@ function transformMutliSelectToField<T extends SelectOptionProps>({
 }: FieldToMultiSelectProps<T>): FormikMultiSelectProps<T> & {
   children: React.ReactNode;
 } {
-  return props;
+  return {
+    ...props,
+    tagInputProps: {
+      ...props?.tagInputProps,
+      inputProps: {
+        id: field?.name,
+        ...props?.tagInputProps?.inputProps,
+      },
+    },
+  };
 }
 
 // # Components -------------------

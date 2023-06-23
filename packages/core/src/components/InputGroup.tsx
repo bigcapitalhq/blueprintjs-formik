@@ -30,6 +30,7 @@ function fieldToInputGroup({
   const showError = getIn(touched, field.name) && !!fieldError;
 
   return {
+    id: field.name,
     intent: showError ? Intent.DANGER : Intent.NONE,
     onBlur:
       onBlur ??

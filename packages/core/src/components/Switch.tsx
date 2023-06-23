@@ -30,6 +30,7 @@ function fieldToSwitch({
   ...props
 }: SwitchToFieldProps) {
   return {
+    id: field.name,
     onBlur:
       onBlur ??
       function (e) {

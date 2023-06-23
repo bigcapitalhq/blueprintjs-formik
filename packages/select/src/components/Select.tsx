@@ -97,6 +97,7 @@ function transformSelectToFieldProps<T extends SelectOptionProps>({
       text={activeItemText}
       rightIcon="double-caret-vertical"
       placeholder={placeholder || 'Select an item...'}
+      id={field.name}
       {...buttonProps}
     />
   );

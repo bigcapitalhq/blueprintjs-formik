@@ -29,6 +29,7 @@ function fieldToHTMLSelect({
   ...props
 }: FieldToTextAreaProps): HTMLSelectProps {
   return {
+    id: field.name,
     ...field,
     ...props,
     multiple: undefined,

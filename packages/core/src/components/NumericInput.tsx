@@ -24,11 +24,12 @@ function transformFieldToNumericInput({
   field: { onBlur: onFieldBlur, ...field },
   form: { touched, errors, setFieldValue },
   ...props
-}: FieldToNumericInputProps): BPNumericInputProps {
+}: FieldToNumericInputProps): BPNumericInputProps & { id: string } {
   const fieldError = getIn(errors, field.name);
   const showError = getIn(touched, field.name) && !!fieldError;
 
   return {
+    id: field.name,
     intent: showError ? Intent.DANGER : Intent.NONE,
     onValueChange: (value: number) => {
       setFieldValue(field.name, value);

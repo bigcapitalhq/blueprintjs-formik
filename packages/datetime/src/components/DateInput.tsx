@@ -50,6 +50,7 @@ function fieldToDateInput({
     },
     inputProps: {
       intent: showError ? Intent.DANGER : Intent.NONE,
+      id: field.name,
       ...props?.inputProps,
     },
     value,

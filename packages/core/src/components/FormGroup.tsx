@@ -26,6 +26,7 @@ const fieldToFormGroup = (
   const showError = meta.touched && meta.error;
 
   return {
+    labelFor: field.name,
     intent: showError ? Intent.DANGER : Intent.NONE,
     helperText: showError ? meta.error : '',
     ...props,
