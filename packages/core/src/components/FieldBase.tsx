@@ -8,6 +8,7 @@ import {
 
 export interface FieldBaseProps extends FieldConfig, FastFieldConfig<any> {
   fastField?: boolean;
+  shouldUpdateDeps?: Record<string, any>;
 }
 
 /**
