@@ -1,9 +1,9 @@
 import { ComponentMeta } from '@storybook/react';
 
-import "normalize.css";
-import "@blueprintjs/icons/lib/css/blueprint-icons.css";
-import "@blueprintjs/core/lib/css/blueprint.css";
-import "@blueprintjs/datetime/lib/css/blueprint-datetime.css"
+import 'normalize.css';
+import '@blueprintjs/icons/lib/css/blueprint-icons.css';
+import '@blueprintjs/core/lib/css/blueprint.css';
+import '@blueprintjs/datetime/lib/css/blueprint-datetime.css';
 
 import { Page } from './Page';
 import { NumericInputPage } from './NumericInputPage';
@@ -15,7 +15,8 @@ import { TextAreaPage } from './TextAreaPage';
 import { SliderPage } from './SliderPage';
 import { HTMLSelectPage } from './HTMLSelectPage';
 import { EditableTextPage } from './EditableTextPage';
-import { DateInputPage } from './DateInputPage'; 
+import { DateInputPage } from './DateInputPage';
+import { SuggestPage } from './SuggestPage';
 
 export default {
   title: 'Example/Page',
@@ -37,6 +38,7 @@ export const Slider = SliderPage.bind({});
 export const HTMLSelect = HTMLSelectPage.bind({});
 export const EditableText = EditableTextPage.bind({});
 export const DateInput = DateInputPage.bind({});
+export const Suggest = SuggestPage.bind({});
 
 // // More on interaction testing: https://storybook.js.org/docs/react/writing-tests/interaction-testing
 // LoggedIn.play = async ({ canvasElement }) => {
