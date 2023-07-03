@@ -12,3 +12,4 @@ export const getAccessor = (accessor: any, activeItem: any) => {
 export const mapItemsById = (items, iteratee) => {
   return keyBy(items, iteratee);
 };
+

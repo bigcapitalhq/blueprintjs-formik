@@ -30,15 +30,16 @@ export default {
 export const InputGroup = Page.bind({});
 export const NumericInput = NumericInputPage.bind({});
 export const Select = SelectPage.bind({});
-export const MultiSelect = MultiSelectPage.bind({});
+// export const MultiSelect = MultiSelectPage.bind({});
 export const Switch = SwitchPage.bind({});
 export const RadioGroup = RadioGroupPage.bind({});
 export const TextArea = TextAreaPage.bind({});
 export const Slider = SliderPage.bind({});
 export const HTMLSelect = HTMLSelectPage.bind({});
 export const EditableText = EditableTextPage.bind({});
-export const DateInput = DateInputPage.bind({});
+// export const DateInput = DateInputPage.bind({});
 export const Suggest = SuggestPage.bind({});
+// export const DateInput = DateInputPage.bind({});
 
 // // More on interaction testing: https://storybook.js.org/docs/react/writing-tests/interaction-testing
 // LoggedIn.play = async ({ canvasElement }) => {
