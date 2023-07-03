@@ -8,13 +8,11 @@ import {
 import { getAccessor } from './utils';
 import { MenuItem } from '@blueprintjs/core';
 import { Field, FieldConfig, FieldProps } from 'formik';
-import { SelectOptionProps } from './types';
+import { FormikItemRendererState, SelectOptionProps } from './types';
 
 // # Types -----------------
 interface SuggestOptionProps extends SelectOptionProps {}
-interface FormikItemRendererState {
-  isSelected: boolean;
-}
+
 type FormikItemRenderer<T> = (
   item: T,
   itemProps: IItemRendererProps,

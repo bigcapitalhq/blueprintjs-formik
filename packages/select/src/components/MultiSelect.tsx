@@ -8,18 +8,13 @@ import {
 import { MenuItem } from '@blueprintjs/core';
 import { Field, FieldConfig, FieldProps } from 'formik';
 import { getAccessor, mapItemsById } from './utils';
-import { SelectOptionProps } from './types';
+import {
+  FormikItemRenderer,
+  FormikItemRendererState,
+  SelectOptionProps,
+} from './types';
 
 // # Types -------------------
-interface FormikItemRendererState {
-  isSelected: boolean;
-}
-type FormikItemRenderer<T> = (
-  item: T,
-  itemProps: IItemRendererProps,
-  { isSelected }: FormikItemRendererState
-) => JSX.Element | null;
-
 interface FormikMultiSelectProps<T>
   extends Omit<
       BPMultiSelectProps<T>,
