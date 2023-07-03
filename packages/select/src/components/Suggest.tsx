@@ -2,62 +2,75 @@ import React, { useCallback, useState } from 'react';
 import {
   Suggest as BPSuggest,
   SuggestProps as BPSuggestProps,
+  IItemRendererProps,
   ItemPredicate,
-  ItemRenderer,
 } from '@blueprintjs/select';
 import { getAccessor } from './utils';
 import { MenuItem } from '@blueprintjs/core';
-import { Field, FieldConfig } from 'formik';
+import { Field, FieldConfig, FieldProps } from 'formik';
 import { SelectOptionProps } from './types';
-
 
 // # Types -----------------
 interface SuggestOptionProps extends SelectOptionProps {}
 interface FormikItemRendererState {
   isSelected: boolean;
 }
-interface FormikSelectProps<T> {
-  itemRenderer?: ItemRenderer<T>;
+type FormikItemRenderer<T> = (
+  item: T,
+  itemProps: IItemRendererProps,
+  { isSelected }: FormikItemRendererState
+) => JSX.Element | null;
+interface FormikSuggestCommonProps<T> {
+  itemRenderer?: FormikItemRenderer<T>;
   onItemSelect?: (item: T, event?: React.SyntheticEvent<HTMLElement>) => void;
   onCreateItemSelect?: (
     item: T,
     event?: React.SyntheticEvent<HTMLElement>
   ) => void;
-}
-interface SuggestProps<T>
-  extends Omit<FieldConfig, 'children' | 'as' | 'component'>,
-    FormikSelectProps<T> {
-  name: string;
   valueAccessor?: string;
   labelAccessor?: string;
   textAccessor?: string;
 }
+interface FormikSuggestSelectProps<T>
+  extends Omit<
+      BPSuggestProps<T>,
+      'itemRenderer' | 'onItemSelect' | 'inputValueRenderer'
+    >,
+    FormikSuggestCommonProps<T> {}
+interface SuggestProps<T>
+  extends Omit<FieldConfig, 'children' | 'as' | 'component'>,
+    FormikSuggestSelectProps<T> {
+  name: string;
+}
+interface FieldToSuggestProps<T>
+  extends FormikSuggestSelectProps<T>,
+    FieldProps {}
 
 // # Utils -------------------
 /**
  * Transforms suggest to field.
  */
-function transformSuggestSelectToField({
+function transformSuggestSelectToField<T extends SelectOptionProps>({
   field: { onBlur: onFieldBlur, ...field },
   form: { touched, errors, ...form },
   meta,
   valueAccessor,
   labelAccessor,
+  textAccessor,
   ...props
-}) {
+}: FieldToSuggestProps<T>) {
   return {
     ...props,
-    tagInputProps: {
-      ...props?.tagInputProps,
-      inputProps: {
-        id: field?.name,
-        ...props?.tagInputProps?.inputProps,
-      },
-    },
   };
 }
 
-function FieldToSuggest<T extends SuggestOptionProps>(props) {
+// # Components -------------------
+/**
+ * Binds formik field to suggest Blueprint field.
+ */
+function FieldToSuggest<T extends SuggestOptionProps>(
+  props: FieldToSuggestProps<T>
+) {
   const {
     valueAccessor,
     labelAccessor,
@@ -66,9 +79,9 @@ function FieldToSuggest<T extends SuggestOptionProps>(props) {
     onCreateItemSelect,
   } = props;
 
-  const _valueAccessor = valueAccessor || 'value';
-  const _labelAccessor = labelAccessor || 'label';
-  const _textAccessor = textAccessor || 'text';
+  const _valueAccessor = (valueAccessor || 'value') as 'value';
+  const _labelAccessor = (labelAccessor || 'label') as 'label';
+  const _textAccessor = (textAccessor || 'text') as 'text';
 
   // Local selected item value.
   const [localSelected, setLocalSelected] = useState<string | number>(
@@ -79,7 +92,7 @@ function FieldToSuggest<T extends SuggestOptionProps>(props) {
     (item: T) => getAccessor(_valueAccessor, item) === field.value
   );
 
-  const renderInputValue = (item: any) => item[textAccessor];
+  const renderInputValue = (item: T) => item[_textAccessor] as string;
 
   // Handle the item change.
   const handleValueChange = (
@@ -96,7 +109,7 @@ function FieldToSuggest<T extends SuggestOptionProps>(props) {
       setLocalSelected(value);
     }
   };
-
+  // Item predicator for searching.
   const itemPredicate: ItemPredicate<T> = (query, item, _index, exactMatch) => {
     const normalizedTitle = item.label?.toLowerCase();
     const normalizedQuery = query.toLowerCase();
@@ -114,8 +127,8 @@ function FieldToSuggest<T extends SuggestOptionProps>(props) {
   // Default item renderer.
   const defaultItemRenderer = useCallback(
     (
-      item: any,
-      { handleClick, modifiers, query },
+      item: T,
+      { handleClick, modifiers, query }: IItemRendererProps,
       { isSelected }: FormikItemRendererState
     ) => {
       if (!modifiers.matchesPredicate) {
@@ -133,7 +146,7 @@ function FieldToSuggest<T extends SuggestOptionProps>(props) {
           key={value}
           onClick={handleClick}
           text={text}
-          //   icon={isSelected ? 'tick' : 'blank'}
+          icon={isSelected ? 'tick' : 'blank'}
         />
       );
     },
@@ -148,7 +161,7 @@ function FieldToSuggest<T extends SuggestOptionProps>(props) {
   );
   // Override `itemRenderer` to add extra props.
   const localItemRenderer = useCallback(
-    (item: any, itemProps: any) => {
+    (item: T, itemProps: IItemRendererProps): JSX.Element | null => {
       const isSelected = isItemSelected(item);
 
       return props.itemRenderer
@@ -158,19 +171,21 @@ function FieldToSuggest<T extends SuggestOptionProps>(props) {
     [isItemSelected, props, defaultItemRenderer]
   );
 
-  const isItemEqual = (item: any, item2: any) => {
-    return item[_valueAccessor] === item2[_valueAccessor];
+  // Specifies how to test if two items are equal. by default, comparing between the item value property.
+  const isItemEqual = (itemA: T, itemB: T) => {
+    return itemA[_valueAccessor] === itemB[_valueAccessor];
   };
 
   return (
     <BPSuggest
       activeItem={activeItem}
+      selectedItem={activeItem}
       inputValueRenderer={renderInputValue}
       onItemSelect={handleValueChange}
       itemPredicate={itemPredicate}
-      itemRenderer={localItemRenderer}
       itemsEqual={isItemEqual}
       {...transformSuggestSelectToField(props)}
+      itemRenderer={localItemRenderer}
     />
   );
 }
