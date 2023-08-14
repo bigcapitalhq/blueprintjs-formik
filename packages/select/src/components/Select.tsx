@@ -19,6 +19,7 @@ interface FormikSelectProps<T>
   extends Omit<BPSelectProps<T>, 'itemRenderer' | 'onItemSelect'> {
   itemRenderer?: ItemRenderer<T>;
   onItemSelect?: (item: T, event?: React.SyntheticEvent<HTMLElement>) => void;
+  onItemChange?: (item: T, event?: React.SyntheticEvent<HTMLElement>) => void;
   onCreateItemSelect?: (
     item: T,
     event?: React.SyntheticEvent<HTMLElement>
@@ -71,6 +72,7 @@ function transformSelectToFieldProps<T extends SelectOptionProps>({
   textAccessor,
   onCreateItemSelect,
   noResultsText,
+  onItemChange,
   ...props
 }: FieldToSelectProps<T>): BPSelectProps<T> & { children: React.ReactNode } {
   const _valueAccessor = valueAccessor || 'value';
@@ -132,11 +134,19 @@ function transformSelectToFieldProps<T extends SelectOptionProps>({
       />
     );
   };
+  // Default behavior of `onItemChange` to set field value to Formik provider.
+  const _onItemChange = (
+    item: T,
+    event?: React.SyntheticEvent<HTMLElement>
+  ) => {
+    const value = getAccessor(_valueAccessor, item);
+    form.setFieldValue(field.name, value);
+  };
   const onItemSelect = (item: T, event?: React.SyntheticEvent<HTMLElement>) => {
     const value = getAccessor(_valueAccessor, item);
 
     if ('undefined' !== typeof value) {
-      form.setFieldValue(field.name, value);
+      onItemChange ? onItemChange(item, event) : _onItemChange(item, event);
     } else {
       onCreateItemSelect && onCreateItemSelect(item, event);
     }
