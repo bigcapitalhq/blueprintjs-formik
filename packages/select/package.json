@@ -4,7 +4,6 @@
   "dependencies": {
     "lodash.get": "^4.4.2",
     "lodash.keyby": "^4.6.0",
-    "styled-components": "^5.3.3",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -16,14 +15,16 @@
       "react-app",
       "react-app/jest"
     ],
-    "overrides": [{
-      "files": [
-        "**/*.stories.*"
-      ],
-      "rules": {
-        "import/no-anonymous-default-export": "off"
+    "overrides": [
+      {
+        "files": [
+          "**/*.stories.*"
+        ],
+        "rules": {
+          "import/no-anonymous-default-export": "off"
+        }
       }
-    }]
+    ]
   },
   "browserslist": {
     "production": [

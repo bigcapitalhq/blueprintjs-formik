@@ -28,6 +28,11 @@ interface FormikSuggestCommonProps<T> {
   valueAccessor?: string;
   labelAccessor?: string;
   textAccessor?: string;
+  onItemChange?: (
+    value: string,
+    item: T,
+    event?: React.SyntheticEvent<HTMLElement>
+  ) => void;
 }
 interface FormikSuggestSelectProps<T>
   extends Omit<
@@ -35,7 +40,7 @@ interface FormikSuggestSelectProps<T>
       'itemRenderer' | 'onItemSelect' | 'inputValueRenderer'
     >,
     FormikSuggestCommonProps<T> {}
-interface SuggestProps<T>
+interface SuggestFieldProps<T>
   extends Omit<FieldConfig, 'children' | 'as' | 'component'>,
     FormikSuggestSelectProps<T> {
   name: string;
@@ -43,6 +48,10 @@ interface SuggestProps<T>
 interface FieldToSuggestProps<T>
   extends FormikSuggestSelectProps<T>,
     FieldProps {}
+
+interface SuggestProps<T> extends FormikSuggestSelectProps<T> {
+  selectedValue?: string | number;
+}
 
 // # Utils -------------------
 /**
@@ -52,11 +61,25 @@ function transformSuggestSelectToField<T extends SelectOptionProps>({
   field: { onBlur: onFieldBlur, ...field },
   form: { touched, errors, ...form },
   meta,
+  ...props
+}: FieldToSuggestProps<T>): SuggestProps<T> {
+  return {
+    selectedValue: field.value,
+    onItemChange: (value: string) => {
+      form.setFieldValue(field.name, value);
+    },
+    ...props,
+  };
+}
+
+function transformSuggestToField<T extends SelectOptionProps>({
   valueAccessor,
   labelAccessor,
   textAccessor,
+  onItemChange,
+  selectedValue,
   ...props
-}: FieldToSuggestProps<T>) {
+}: SuggestProps<T>)  {
   return {
     ...props,
   };
@@ -64,17 +87,18 @@ function transformSuggestSelectToField<T extends SelectOptionProps>({
 
 // # Components -------------------
 /**
- * Binds formik field to suggest Blueprint field.
+ * Suggest component.
+ * @param {SuggestProps<T>} props
+ * @returns {JSX.Element}
  */
-function FieldToSuggest<T extends SuggestOptionProps>(
-  props: FieldToSuggestProps<T>
-) {
+export function Suggest<T extends SuggestOptionProps>(props: SuggestProps<T>) {
   const {
     valueAccessor,
     labelAccessor,
     textAccessor,
-    field,
+    selectedValue,
     onCreateItemSelect,
+    onItemChange,
   } = props;
 
   const _valueAccessor = (valueAccessor || 'value') as 'value';
@@ -83,18 +107,17 @@ function FieldToSuggest<T extends SuggestOptionProps>(
 
   // Local selected item value.
   const [localSelected, setLocalSelected] = useState<string | number>(
-    props.field.value
+    selectedValue || ''
   );
   // Activate item.
   const activeItem = props.items.find(
-    (item: T) => getAccessor(_valueAccessor, item) === field.value
+    (item: T) => getAccessor(_valueAccessor, item) === selectedValue
   );
-
   const renderInputValue = (item: T) => item[_textAccessor] as string;
 
   // Handle the item change.
   const handleValueChange = (
-    item: any,
+    item: T,
     event?: React.SyntheticEvent<HTMLElement>
   ) => {
     const value = getAccessor(_valueAccessor, item);
@@ -103,8 +126,8 @@ function FieldToSuggest<T extends SuggestOptionProps>(
     if (typeof value === 'undefined') {
       onCreateItemSelect && onCreateItemSelect(item, event);
     } else if (!isSelected) {
-      props.form.setFieldValue(props.field.name, value);
       setLocalSelected(value);
+      onItemChange && onItemChange(value, item, event);
     }
   };
   // Item predicator for searching.
@@ -169,7 +192,8 @@ function FieldToSuggest<T extends SuggestOptionProps>(
     [isItemSelected, props, defaultItemRenderer]
   );
 
-  // Specifies how to test if two items are equal. by default, comparing between the item value property.
+  // Specifies how to test if two items are equal.
+  // by default, comparing between the item value property.
   const isItemEqual = (itemA: T, itemB: T) => {
     return itemA[_valueAccessor] === itemB[_valueAccessor];
   };
@@ -182,19 +206,31 @@ function FieldToSuggest<T extends SuggestOptionProps>(
       onItemSelect={handleValueChange}
       itemPredicate={itemPredicate}
       itemsEqual={isItemEqual}
-      {...transformSuggestSelectToField(props)}
+      {...transformSuggestToField(props)}
       itemRenderer={localItemRenderer}
     />
   );
 }
 
 /**
- * Suggest field binded to Formik.
- * @param {SuggestProps<T>} props
+ * Binds formik field to suggest Blueprint field.
+ * @param {FieldToSuggestProps<T>} props
  * @returns {JSX.Element}
  */
-export function Suggest<T extends SuggestOptionProps>(
-  props: SuggestProps<T>
+function FieldToSuggest<T extends SuggestOptionProps>(
+  props: FieldToSuggestProps<T>
+) {
+  return <Suggest {...transformSuggestSelectToField(props)} />;
+}
+
+/**
+ * Suggest field binded to Formik.
+ * @exports
+ * @param {SuggestFieldProps<T>} props
+ * @returns {JSX.Element}
+ */
+export function SuggestField<T extends SuggestOptionProps>(
+  props: SuggestFieldProps<T>
 ): JSX.Element {
   return <Field {...props} component={FieldToSuggest} />;
 }
