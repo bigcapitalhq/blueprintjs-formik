@@ -1,14 +1,15 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
+import { Field, FieldConfig, FieldProps } from 'formik';
 import {
   Suggest as BPSuggest,
   SuggestProps as BPSuggestProps,
   IItemRendererProps,
   ItemPredicate,
 } from '@blueprintjs/select';
-import { getAccessor } from './utils';
 import { MenuItem } from '@blueprintjs/core';
-import { Field, FieldConfig, FieldProps } from 'formik';
+import { getAccessor } from './utils';
 import { FormikItemRendererState, SelectOptionProps } from './types';
+import { useUncontrolled } from '../../../common/use-uncontrolled';
 
 // # Types -----------------
 interface SuggestOptionProps extends SelectOptionProps {}
@@ -33,6 +34,7 @@ interface FormikSuggestCommonProps<T> {
     item: T,
     event?: React.SyntheticEvent<HTMLElement>
   ) => void;
+  onValueChange?: (value: string | number | null) => void;
 }
 interface FormikSuggestSelectProps<T>
   extends Omit<
@@ -51,6 +53,7 @@ interface FieldToSuggestProps<T>
 
 interface SuggestProps<T> extends FormikSuggestSelectProps<T> {
   selectedValue?: string | number;
+  initialSelectedValue?: string | number;
 }
 
 // # Utils -------------------
@@ -65,7 +68,7 @@ function transformSuggestSelectToField<T extends SelectOptionProps>({
 }: FieldToSuggestProps<T>): SuggestProps<T> {
   return {
     selectedValue: field.value,
-    onItemChange: (value: string) => {
+    onValueChange: (value) => {
       form.setFieldValue(field.name, value);
     },
     ...props,
@@ -78,8 +81,9 @@ function transformSuggestToField<T extends SelectOptionProps>({
   textAccessor,
   onItemChange,
   selectedValue,
+  initialSelectedValue,
   ...props
-}: SuggestProps<T>)  {
+}: SuggestProps<T>) {
   return {
     ...props,
   };
@@ -97,8 +101,10 @@ export function Suggest<T extends SuggestOptionProps>(props: SuggestProps<T>) {
     labelAccessor,
     textAccessor,
     selectedValue,
+    initialSelectedValue,
     onCreateItemSelect,
     onItemChange,
+    onValueChange,
   } = props;
 
   const _valueAccessor = (valueAccessor || 'value') as 'value';
@@ -106,17 +112,26 @@ export function Suggest<T extends SuggestOptionProps>(props: SuggestProps<T>) {
   const _textAccessor = (textAccessor || 'text') as 'text';
 
   // Local selected item value.
-  const [localSelected, setLocalSelected] = useState<string | number>(
-    selectedValue || ''
-  );
+  const [localSelected, handleValueChange] = useUncontrolled<
+    string | number | null
+  >({
+    value: selectedValue,
+    initialValue: initialSelectedValue,
+    finalValue: null,
+    onChange: onValueChange,
+  });
+
   // Activate item.
-  const activeItem = props.items.find(
-    (item: T) => getAccessor(_valueAccessor, item) === selectedValue
-  );
+  const activeItem =
+    props.items.find(
+      (item: T) => getAccessor(_valueAccessor, item) === localSelected
+    ) || null;
+
+  // Render input value.
   const renderInputValue = (item: T) => item[_textAccessor] as string;
 
   // Handle the item change.
-  const handleValueChange = (
+  const handleItemSelected = (
     item: T,
     event?: React.SyntheticEvent<HTMLElement>
   ) => {
@@ -125,8 +140,8 @@ export function Suggest<T extends SuggestOptionProps>(props: SuggestProps<T>) {
 
     if (typeof value === 'undefined') {
       onCreateItemSelect && onCreateItemSelect(item, event);
-    } else if (!isSelected) {
-      setLocalSelected(value);
+    } else {
+      handleValueChange(!isSelected ? value : null);
       onItemChange && onItemChange(value, item, event);
     }
   };
@@ -175,10 +190,11 @@ export function Suggest<T extends SuggestOptionProps>(props: SuggestProps<T>) {
   );
   // Detarmines whether the given item is selected.
   const isItemSelected = useCallback(
-    (_item) => {
-      return _item === localSelected;
+    (_item: T) => {
+      const value = getAccessor(_valueAccessor, _item);
+      return value === localSelected;
     },
-    [localSelected]
+    [localSelected, _valueAccessor]
   );
   // Override `itemRenderer` to add extra props.
   const localItemRenderer = useCallback(
@@ -203,7 +219,7 @@ export function Suggest<T extends SuggestOptionProps>(props: SuggestProps<T>) {
       activeItem={activeItem}
       selectedItem={activeItem}
       inputValueRenderer={renderInputValue}
-      onItemSelect={handleValueChange}
+      onItemSelect={handleItemSelected}
       itemPredicate={itemPredicate}
       itemsEqual={isItemEqual}
       {...transformSuggestToField(props)}
