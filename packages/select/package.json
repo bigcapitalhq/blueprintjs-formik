@@ -1,6 +1,6 @@
 {
   "name": "@blueprintjs-formik/select",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "dependencies": {
     "lodash.get": "^4.4.2",
     "lodash.keyby": "^4.6.0",
@@ -64,7 +64,6 @@
   "peerDependencies": {
     "react": "16 || ^17.0.2 || 18",
     "react-dom": "16 || ^17.0.2 || 18",
-    "react-scripts": "5.0.0",
     "@blueprintjs/core": "^3.52.0 || 4 || 5",
     "@blueprintjs/select": "^3.18.12 || 4 || 5",
     "formik": "^2.2.9"
