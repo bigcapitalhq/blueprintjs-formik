@@ -1,6 +1,6 @@
 {
   "name": "@blueprintjs-formik/monorepo",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Bindings for using Formik and Blueprint.js",
   "private": true,
   "workspaces": [
