@@ -11,7 +11,7 @@ import {
   ItemRenderer,
 } from '@blueprintjs/select';
 import { Field, FieldProps, FieldConfig } from 'formik';
-import { SelectOptionProps } from './types';
+import { Accessor, SelectOptionProps } from './types';
 import { getAccessor } from './utils';
 
 // # Types -----------------
@@ -38,14 +38,14 @@ interface SelectProps<T>
   extends Omit<FieldConfig, 'children' | 'as' | 'component'>,
     FormikSelectProps<T> {
   name: string;
-  valueAccessor?: string;
-  labelAccessor?: string;
-  textAccessor?: string;
+  valueAccessor?: Accessor<T>;
+  labelAccessor?: Accessor<T>;
+  textAccessor?: Accessor<T>;
 }
 interface FieldToSelectProps<T> extends FormikSelectProps<T>, FieldProps {
-  valueAccessor: string;
-  labelAccessor: string;
-  textAccessor: string;
+  valueAccessor: Accessor<T>;
+  labelAccessor: Accessor<T>;
+  textAccessor: Accessor<T>;
   input: (props: {
     activeItem: T;
     label: string;

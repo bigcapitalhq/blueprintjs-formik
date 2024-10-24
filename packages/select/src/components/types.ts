@@ -22,3 +22,6 @@ export type FormikItemRenderer<T> = (
   itemProps: IItemRendererProps,
   { isSelected }: FormikItemRendererState
 ) => JSX.Element | null;
+
+
+export type Accessor<T> = string | ((activeItem: T) => void);
