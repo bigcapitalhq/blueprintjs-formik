@@ -1,24 +1,22 @@
 import React from 'react';
-import { FieldConfig, FieldProps, getIn } from 'formik';
+import { FieldProps, getIn } from 'formik';
 import {
   EditableText as BPEditableText,
   EditableTextProps as BPEditableTextProps,
   Intent,
 } from '@blueprintjs/core';
-import { Field } from './FieldBase';
+import { Field, FieldBaseProps } from './FieldBase';
 
 interface EditableTextProps
   extends BPEditableTextProps,
-    Omit<FieldConfig, 'children' | 'value'> {
-  value: string;
-}
+  Omit<FieldBaseProps, 'children' | 'value'> { }
 
 export interface FieldToEditableTextProps
   extends FieldProps,
-    BPEditableTextProps {}
+  BPEditableTextProps { }
 
 /**
- * Transformes the Formik field props to editable text.
+ * Transforms the Formik field props to editable text.
  * @param   {FieldToEditableTextProps}
  * @returns {EditableTextProps}
  */
@@ -42,7 +40,7 @@ const fieldToEditableText = ({
 };
 
 /**
- * Transformes the Formik field props to editable text component.
+ * Transforms the Formik field props to editable text component.
  * @param   {FieldToEditableTextProps}
  * @returns {JSX.Element}
  */
@@ -51,7 +49,7 @@ function FieldToEditableText({ ...props }: FieldToEditableTextProps) {
 }
 
 /**
- * Editable text binded with Formik.
+ * Editable text bound with Formik.
  * @param   {EditableTextProps}
  * @returns {JSX.Element}
  */

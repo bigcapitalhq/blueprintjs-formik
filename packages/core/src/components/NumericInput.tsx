@@ -1,22 +1,22 @@
 import React from 'react';
-import { FieldProps, FieldConfig, getIn } from 'formik';
+import { FieldProps, getIn } from 'formik';
 import {
   NumericInput as BPNumericInput,
   NumericInputProps as BPNumericInputProps,
   Intent,
 } from '@blueprintjs/core';
-import { Field } from './FieldBase';
+import { Field, FieldBaseProps } from './FieldBase';
 
 export interface NumericInputProps
-  extends Omit<FieldConfig, 'children' | 'component'>,
-    Omit<BPNumericInputProps, 'value'> {}
+  extends Omit<FieldBaseProps, 'children' | 'component'>,
+  Omit<BPNumericInputProps, 'value'> { }
 
 export interface FieldToNumericInputProps
   extends FieldProps,
-    BPNumericInputProps {}
+  BPNumericInputProps { }
 
 /**
- * Transformes field to numeric input.
+ * Transforms field to numeric input.
  * @param   {FieldToNumericInputProps}
  * @returns {BPNumericInputProps}
  */
@@ -49,7 +49,7 @@ function FieldToNumericInput({ ...props }: FieldToNumericInputProps) {
 }
 
 /**
- * Numeric input Blueprint component binded with Formik field.
+ * Numeric input Blueprint component bounded with Formik field.
  * @param   {NumericInputProps}
  * @returns {JSX.Element}
  */

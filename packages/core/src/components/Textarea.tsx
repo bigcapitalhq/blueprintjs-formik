@@ -1,26 +1,25 @@
 import React from 'react';
-import { getIn, FieldConfig, FieldProps } from 'formik';
+import { getIn, FieldProps } from 'formik';
 import {
   TextArea as BPTextArea,
   TextAreaProps as BPTextAreaProps,
   Intent,
 } from '@blueprintjs/core';
-import { Field } from './FieldBase';
+import { Field, FieldBaseProps } from './FieldBase';
 
 export interface TextAreaProps
-  extends Omit<FieldConfig, 'children' | 'component' | 'as'>,
-    BPTextAreaProps {
-  value: string;
+  extends Omit<FieldBaseProps, 'children' | 'component' | 'as' | 'value'>,
+  BPTextAreaProps {
   name: string;
-  onBlur: (e: React.FocusEvent<any>) => void;
+  onBlur?: (e: React.FocusEvent<any>) => void;
 }
 
 interface FieldToTextAreaProps
   extends FieldProps,
-    Omit<BPTextAreaProps, 'form'> {}
+  Omit<BPTextAreaProps, 'form'> { }
 
 /**
- * Transformes the field props to textarea props.
+ * Transforms the field props to textarea props.
  * @param   {Omit<FieldToTextAreaProps, 'children'>}
  * @returns {TextAreaProps}
  */
@@ -47,7 +46,7 @@ function fieldToTextarea({
 }
 
 /**
- * Transformes the field props to textarea props.
+ * Transforms the field props to textarea props.
  * @param   {FieldToTextAreaProps}
  * @returns {JSX.Element}
  */
@@ -59,7 +58,7 @@ function FieldToTextArea({
 }
 
 /**
- * Textarea Blurprint component binded with Formik.
+ * Textarea Blurprint component bound with Formik.
  * @param   {TextAreaProps}
  * @returns {JSX.Element}
  */

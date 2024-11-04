@@ -1,20 +1,20 @@
 import React from 'react';
-import { getIn, FieldConfig, FieldProps } from 'formik';
+import { getIn, FieldProps } from 'formik';
 import {
   Slider as BPSlider,
   SliderProps as BPSliderProps,
   Intent,
 } from '@blueprintjs/core';
-import { Field } from './FieldBase';
+import { Field, FieldBaseProps } from './FieldBase';
 
 export interface SliderProps
   extends BPSliderProps,
-    Omit<FieldConfig, 'component' | 'as' | 'value'> {}
+  Omit<FieldBaseProps, 'component' | 'as' | 'value'> { }
 
-interface SliderToFieldProps extends FieldProps, BPSliderProps {}
+interface SliderToFieldProps extends FieldProps, BPSliderProps { }
 
 /**
- * Transformes the field props to slider props.
+ * Transforms the field props to slider props.
  * @param   {SliderToFieldProps}
  * @returns {SliderProps}
  */
@@ -37,7 +37,7 @@ function fieldToSlider({
 }
 
 /**
- * Transformes the field props to slider props.
+ * Transforms the field props to slider props.
  * @param   {SliderToFieldProps}
  * @returns {JSX.Element}
  */
@@ -46,7 +46,7 @@ function FieldToSlider({ ...props }: SliderToFieldProps): JSX.Element {
 }
 
 /**
- * Transformes the field props to slider props.
+ * Transforms the field props to slider props.
  * @param   {SliderProps}
  * @returns {JSX.Element}
  */

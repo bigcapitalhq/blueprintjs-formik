@@ -3,21 +3,21 @@ import {
   Checkbox as BPCheckbox,
   CheckboxProps as BPCheckboxProps,
 } from '@blueprintjs/core';
-import { FieldConfig, FieldProps } from 'formik';
-import { Field } from './FieldBase';
+import { FieldProps } from 'formik';
+import { Field, FieldBaseProps } from './FieldBase';
 
 export interface CheckboxProps
   extends BPCheckboxProps,
-    Omit<FieldConfig, 'children' | 'component' | 'as' | 'type' | 'value'> {
+  Omit<FieldBaseProps, 'children' | 'component' | 'as' | 'type' | 'value'> {
   name: string;
 }
 
 interface CheckboxToFieldProps
   extends FieldProps,
-    Omit<BPCheckboxProps, 'form'> {}
+  Omit<BPCheckboxProps, 'form'> { }
 
 /**
- * Transformes the field props to checkbox props.
+ * Transforms the field props to checkbox props.
  * @param   {CheckboxToFieldProps}
  * @returns {CheckboxProps}
  */
@@ -44,7 +44,7 @@ function fieldToCheckbox({
 }
 
 /**
- * Transformes the Formik field props to checkbox group component.
+ * Transforms the Formik field props to checkbox group component.
  * @param   {CheckboxToFieldProps}
  * @returns {JSX.Element}
  */

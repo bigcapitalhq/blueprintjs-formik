@@ -1,19 +1,19 @@
 import React from 'react';
-import { getIn, FieldConfig, FieldProps } from 'formik';
+import { getIn, FieldProps } from 'formik';
 import {
   InputGroup as BPInputGroup,
   InputGroupProps2 as PBInputGroupProps2,
   Intent,
 } from '@blueprintjs/core';
-import { Field } from './FieldBase';
+import { Field, FieldBaseProps } from './FieldBase';
 
 interface InputGroupProps
-  extends Omit<FieldConfig, 'children' | 'component' | 'as'>,
-    Omit<PBInputGroupProps2, 'value' | 'name'> {}
+  extends Omit<FieldBaseProps, 'children' | 'component' | 'as'>,
+  Omit<PBInputGroupProps2, 'value' | 'name'> { }
 
 export interface FieldToInputProps
   extends FieldProps,
-    Omit<PBInputGroupProps2, 'form'> {}
+  Omit<PBInputGroupProps2, 'form'> { }
 
 /**
  * Transforms field props to input group props.
@@ -55,7 +55,7 @@ function FieldToInputGroup({
 }
 
 /**
- * Input group Blueprint component binded with Formik.
+ * Input group Blueprint component bound with Formik.
  * @param   {InputGroupProps}
  * @returns {JSX.Element}
  */

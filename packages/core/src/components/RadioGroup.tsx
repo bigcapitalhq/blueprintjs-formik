@@ -8,19 +8,19 @@ import { Field } from './FieldBase';
 
 export interface RadioGroupProps
   extends Omit<BPRadioGroupProps, 'onChange'>,
-    Omit<FieldConfig, 'component'> {
+  Omit<FieldConfig, 'component'> {
   name: string;
   onChange?: (event: React.FormEvent<HTMLInputElement>) => void;
 }
 
 interface FieldToRadioGroupProps
   extends FieldProps,
-    Omit<BPRadioGroupProps, 'onChange'> {
+  Omit<BPRadioGroupProps, 'onChange'> {
   onChange?: (event: React.FormEvent<HTMLInputElement>) => void;
 }
 
 /**
- * Transformes the field props to radio group component.
+ * Transforms the field props to radio group component.
  * @param   {FieldToRadioGroupProps}
  * @returns {BPRadioGroupProps}
  */
@@ -42,7 +42,7 @@ export function fieldToRadioGroup({
 }
 
 /**
- * Transformes the field props to radio group component.
+ * Transforms the field props to radio group component.
  * @param   {FieldToRadioGroupProps}
  * @returns {JSX.Element}
  */
