@@ -1,6 +1,6 @@
 {
   "name": "@blueprintjs-formik/core",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "dependencies": {
     "lodash.get": "^4.4.2",
     "lodash.keyby": "^4.6.0",
