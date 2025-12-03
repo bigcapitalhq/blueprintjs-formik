@@ -36,7 +36,7 @@ interface FormikSelectProps<T>
 }
 interface SelectProps<T>
   extends Omit<FieldConfig, 'children' | 'as' | 'component'>,
-    FormikSelectProps<T> {
+  FormikSelectProps<T> {
   name: string;
   valueAccessor?: Accessor<T>;
   labelAccessor?: Accessor<T>;

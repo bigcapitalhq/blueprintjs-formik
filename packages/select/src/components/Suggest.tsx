@@ -12,7 +12,7 @@ import { FormikItemRendererState, SelectOptionProps } from './types';
 import { useUncontrolled } from '../../../common/use-uncontrolled';
 
 // # Types -----------------
-interface SuggestOptionProps extends SelectOptionProps {}
+interface SuggestOptionProps extends SelectOptionProps { }
 
 type FormikItemRenderer<T> = (
   item: T,
@@ -38,18 +38,18 @@ interface FormikSuggestCommonProps<T> {
 }
 interface FormikSuggestSelectProps<T>
   extends Omit<
-      BPSuggestProps<T>,
-      'itemRenderer' | 'onItemSelect' | 'inputValueRenderer'
-    >,
-    FormikSuggestCommonProps<T> {}
+    BPSuggestProps<T>,
+    'itemRenderer' | 'onItemSelect' | 'inputValueRenderer'
+  >,
+  FormikSuggestCommonProps<T> { }
 interface SuggestFieldProps<T>
   extends Omit<FieldConfig, 'children' | 'as' | 'component'>,
-    FormikSuggestSelectProps<T> {
+  FormikSuggestSelectProps<T> {
   name: string;
 }
 interface FieldToSuggestProps<T>
   extends FormikSuggestSelectProps<T>,
-    FieldProps {}
+  FieldProps { }
 
 interface SuggestProps<T> extends FormikSuggestSelectProps<T> {
   selectedValue?: string | number;

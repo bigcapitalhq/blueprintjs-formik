@@ -4,40 +4,39 @@ import * as Yup from 'yup';
 
 import { FormValues } from './FormValues';
 import { FormGroup } from '../packages/core/src';
-import { DateInput } from '../packages/datetime/src';
+import { TimezoneSelect } from '../packages/datetime/src';
 
 const FormValidation = Yup.object().shape({
-  firstName: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('Required'),
+  timezone: Yup.string()
+    .required('Timezone is required'),
 });
 
 interface Values {
-  longText: string;
+  timezone: string;
 }
 
-export function DateInputPage() {
+export function TimezoneSelectPage() {
   return (
     <article>
       <Formik
         initialValues={{
-          longText: '4/26/2022',
+          timezone: 'America/New_York',
         }}
         validationSchema={FormValidation}
         onSubmit={(
           values: Values,
           { setSubmitting }: FormikHelpers<Values>
-        ) => { }}
+        ) => {
+          console.log('Form submitted with values:', values);
+          setSubmitting(false);
+        }}
       >
         {({ values }) => (
           <Form>
-            <FormGroup name={'longText'} label={'Number'}>
-              <DateInput
-                name={'longText'}
-                parseDate={(str) => new Date(str)}
-                placeholder={'M/D/YYYY'}
-                formatDate={(date) => date.toLocaleString()}
+            <FormGroup name={'timezone'} label={'Timezone'}>
+              <TimezoneSelect
+                name={'timezone'}
+                placeholder={'Select a timezone...'}
               />
             </FormGroup>
 
