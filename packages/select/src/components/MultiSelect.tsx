@@ -17,10 +17,10 @@ import {
 // # Types -------------------
 interface FormikMultiSelectProps<T>
   extends Omit<
-      BPMultiSelectProps<T>,
-      'itemRenderer' | 'onItemSelect' | 'selectedItems' | 'tagRenderer'
-    >,
-    FormikMultiSelectExtraProps<T> {
+    BPMultiSelectProps<T>,
+    'itemRenderer' | 'onItemSelect' | 'selectedItems' | 'tagRenderer'
+  >,
+  FormikMultiSelectExtraProps<T> {
   itemRenderer?: FormikItemRenderer<T>;
   onItemSelect?: (item: T, event?: React.SyntheticEvent<HTMLElement>) => void;
   selectedItems?: T[];
@@ -39,12 +39,12 @@ interface FormikMultiSelectExtraProps<T> {
 }
 interface MultiSelectProps<T>
   extends FormikMultiSelectProps<T>,
-    Omit<FieldConfig, 'children' | 'as' | 'component'> {
+  Omit<FieldConfig, 'children' | 'as' | 'component'> {
   name: string;
 }
 interface FieldToMultiSelectProps<T>
   extends FormikMultiSelectProps<T>,
-    FieldProps {
+  FieldProps {
   children: React.ReactNode;
 }
 
@@ -103,7 +103,7 @@ function FieldToMutliSelect<T extends SelectOptionProps>({
 
   // Updates the local selected state and the formik field.
   const updateLocalAndField = useCallback(
-    (newLocalSelected) => {
+    (newLocalSelected: (string | number)[]) => {
       props.form.setFieldValue(props.field.name, newLocalSelected);
       setLocalSelected(newLocalSelected);
     },
@@ -117,7 +117,7 @@ function FieldToMutliSelect<T extends SelectOptionProps>({
   );
   // Detarmines whether the given item is selected.
   const isItemSelected = useCallback(
-    (item) => {
+    (item: T) => {
       const value = getAccessor(valueAccessor, item);
       return localSelected.some((i) => i === value);
     },

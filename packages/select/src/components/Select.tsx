@@ -96,9 +96,8 @@ function transformSelectToFieldProps<T extends SelectOptionProps>({
     })
   ) : (
     <BPButton
-      text={activeItemText}
+      text={activeItemText || placeholder || 'Select an item...'}
       rightIcon="double-caret-vertical"
-      placeholder={placeholder || 'Select an item...'}
       id={field.name}
       {...buttonProps}
     />

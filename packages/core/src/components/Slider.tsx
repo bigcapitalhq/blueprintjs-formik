@@ -9,7 +9,7 @@ import { Field, FieldBaseProps } from './FieldBase';
 
 export interface SliderProps
   extends BPSliderProps,
-  Omit<FieldBaseProps, 'component' | 'as' | 'value'> { }
+  Omit<FieldBaseProps, 'component' | 'as' | 'value' | 'children'> { }
 
 interface SliderToFieldProps extends FieldProps, BPSliderProps { }
 
