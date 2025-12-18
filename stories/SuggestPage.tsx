@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Form, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { FormValues } from './FormValues';
 
 import { FormGroup } from '../packages/core/src';
-import { Select, SelectOptionProps, Suggest } from '../packages/select/src';
+import { SelectOptionProps, Suggest, FormikSuggest } from '../packages/select/src';
 
 const FormValidation = Yup.object().shape({
   firstName: Yup.string()
@@ -38,35 +38,58 @@ const TOP_100_FILMS: IFilm[] = [
 ];
 
 export const SuggestPage = () => {
+  // Standalone Suggest state
+  const [standaloneValue, setStandaloneValue] = useState<string | number | undefined>(1999);
+
   return (
     <article>
-      <Formik
-        initialValues={{
-          number: 1972,
-        }}
-        validationSchema={FormValidation}
-        onSubmit={(
-          values: Values,
-          { setSubmitting }: FormikHelpers<Values>
-        ) => {}}
-      >
-        {({ values }) => (
-          <Form>
-            <FormGroup name={'number'} label={'Number'}>
-              <Suggest
-                items={TOP_100_FILMS}
-                name={'number'}
-                valueAccessor={'year'}
-                labelAccessor={'year'}
-                textAccessor={'title'}
-              />
-            </FormGroup>
+      {/* Standalone Suggest (without Formik) */}
+      <section style={{ marginBottom: '2rem' }}>
+        <h3>Standalone Suggest (without Formik)</h3>
+        <Suggest
+          items={TOP_100_FILMS}
+          selectedValue={standaloneValue}
+          onValueChange={(value) => setStandaloneValue(value ?? undefined)}
+          valueAccessor={'year'}
+          labelAccessor={'year'}
+          textAccessor={'title'}
+        />
+        <p style={{ marginTop: '0.5rem' }}>
+          Selected value: <strong>{standaloneValue ?? 'None'}</strong>
+        </p>
+      </section>
 
-            <button type="submit">Submit</button>
-            <FormValues values={values} />
-          </Form>
-        )}
-      </Formik>
+      {/* FormikSuggest (with Formik) */}
+      <section>
+        <h3>FormikSuggest (with Formik)</h3>
+        <Formik
+          initialValues={{
+            number: 1972,
+          }}
+          validationSchema={FormValidation}
+          onSubmit={(
+            values: Values,
+            { setSubmitting }: FormikHelpers<Values>
+          ) => { }}
+        >
+          {({ values }) => (
+            <Form>
+              <FormGroup name={'number'} label={'Number'}>
+                <FormikSuggest
+                  items={TOP_100_FILMS}
+                  name={'number'}
+                  valueAccessor={'year'}
+                  labelAccessor={'year'}
+                  textAccessor={'title'}
+                />
+              </FormGroup>
+
+              <button type="submit">Submit</button>
+              <FormValues values={values} />
+            </Form>
+          )}
+        </Formik>
+      </section>
     </article>
   );
 };

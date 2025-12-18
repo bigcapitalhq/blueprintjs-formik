@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Form, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { FormValues } from './FormValues';
 
 import { FormGroup } from '../packages/core/src';
-import { Select, SelectOptionProps } from '../packages/select/src';
+import { Select, FormikSelect, SelectOptionProps } from '../packages/select/src';
 
 const FormValidation = Yup.object().shape({
   firstName: Yup.string()
@@ -38,35 +38,58 @@ const TOP_100_FILMS: IFilm[] = [
 ];
 
 export const SelectPage = () => {
+  // Standalone Select state
+  const [standaloneValue, setStandaloneValue] = useState<string | number | undefined>(1999);
+
   return (
     <article>
-      <Formik
-        initialValues={{
-          number: 1972,
-        }}
-        validationSchema={FormValidation}
-        onSubmit={(
-          values: Values,
-          { setSubmitting }: FormikHelpers<Values>
-        ) => {}}
-      >
-        {({ values }) => (
-          <Form>
-            <FormGroup name={'number'} label={'Number'}>
-              <Select
-                items={TOP_100_FILMS}
-                name={'number'}
-                valueAccessor={'year'}
-                labelAccessor={'year'}
-                textAccessor={'title'}
-              />
-            </FormGroup>
+      {/* Standalone Select (without Formik) */}
+      <section style={{ marginBottom: '2rem' }}>
+        <h3>Standalone Select (without Formik)</h3>
+        <Select
+          items={TOP_100_FILMS}
+          selectedValue={standaloneValue}
+          onValueChange={(value) => setStandaloneValue(value ?? undefined)}
+          valueAccessor={'year'}
+          labelAccessor={'year'}
+          textAccessor={'title'}
+        />
+        <p style={{ marginTop: '0.5rem' }}>
+          Selected value: <strong>{standaloneValue ?? 'None'}</strong>
+        </p>
+      </section>
 
-            <button type="submit">Submit</button>
-            <FormValues values={values} />
-          </Form>
-        )}
-      </Formik>
+      {/* FormikSelect (with Formik) */}
+      <section>
+        <h3>FormikSelect (with Formik)</h3>
+        <Formik
+          initialValues={{
+            number: 1972,
+          }}
+          validationSchema={FormValidation}
+          onSubmit={(
+            values: Values,
+            { setSubmitting }: FormikHelpers<Values>
+          ) => {}}
+        >
+          {({ values }) => (
+            <Form>
+              <FormGroup name={'number'} label={'Number'}>
+                <FormikSelect
+                  items={TOP_100_FILMS}
+                  name={'number'}
+                  valueAccessor={'year'}
+                  labelAccessor={'year'}
+                  textAccessor={'title'}
+                />
+              </FormGroup>
+
+              <button type="submit">Submit</button>
+              <FormValues values={values} />
+            </Form>
+          )}
+        </Formik>
+      </section>
     </article>
   );
 };
