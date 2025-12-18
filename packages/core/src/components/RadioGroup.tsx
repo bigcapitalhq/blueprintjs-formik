@@ -8,7 +8,7 @@ import { Field } from './FieldBase';
 
 export interface RadioGroupProps
   extends Omit<BPRadioGroupProps, 'onChange'>,
-  Omit<FieldConfig, 'component'> {
+  Omit<FieldConfig, 'component' | 'children'> {
   name: string;
   onChange?: (event: React.FormEvent<HTMLInputElement>) => void;
 }
