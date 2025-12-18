@@ -14,13 +14,14 @@ import { useUncontrolled } from '../../../common/use-uncontrolled';
 // # Types -----------------
 interface SuggestOptionProps extends SelectOptionProps { }
 
-type FormikItemRenderer<T> = (
+type SuggestItemRenderer<T> = (
   item: T,
   itemProps: IItemRendererProps,
   { isSelected }: FormikItemRendererState
 ) => JSX.Element | null;
-interface FormikSuggestCommonProps<T> {
-  itemRenderer?: FormikItemRenderer<T>;
+
+interface SuggestCommonProps<T> {
+  itemRenderer?: SuggestItemRenderer<T>;
   onItemSelect?: (item: T, event?: React.SyntheticEvent<HTMLElement>) => void;
   onCreateItemSelect?: (
     item: T,
@@ -36,31 +37,32 @@ interface FormikSuggestCommonProps<T> {
   ) => void;
   onValueChange?: (value: string | number | null) => void;
 }
-interface FormikSuggestSelectProps<T>
+
+interface BaseSuggestProps<T>
   extends Omit<
     BPSuggestProps<T>,
     'itemRenderer' | 'onItemSelect' | 'inputValueRenderer'
   >,
-  FormikSuggestCommonProps<T> { }
-interface SuggestFieldProps<T>
-  extends Omit<FieldConfig, 'children' | 'as' | 'component'>,
-  FormikSuggestSelectProps<T> {
-  name: string;
-}
-interface FieldToSuggestProps<T>
-  extends FormikSuggestSelectProps<T>,
-  FieldProps { }
+  SuggestCommonProps<T> { }
 
-interface SuggestProps<T> extends FormikSuggestSelectProps<T> {
+export interface SuggestProps<T> extends BaseSuggestProps<T> {
   selectedValue?: string | number;
   initialSelectedValue?: string | number;
 }
 
+export interface FormikSuggestProps<T>
+  extends Omit<FieldConfig, 'children' | 'as' | 'component'>,
+  BaseSuggestProps<T> {
+  name: string;
+}
+
+interface FieldToSuggestProps<T> extends BaseSuggestProps<T>, FieldProps { }
+
 // # Utils -------------------
 /**
- * Transforms suggest to field.
+ * Transforms Formik field props to Suggest props.
  */
-function transformSuggestSelectToField<T extends SelectOptionProps>({
+function transformFieldToSuggestProps<T extends SelectOptionProps>({
   field: { onBlur: onFieldBlur, ...field },
   form: { touched, errors, ...form },
   meta,
@@ -75,7 +77,7 @@ function transformSuggestSelectToField<T extends SelectOptionProps>({
   };
 }
 
-function transformSuggestToField<T extends SelectOptionProps>({
+function transformSuggestProps<T extends SelectOptionProps>({
   valueAccessor,
   labelAccessor,
   textAccessor,
@@ -91,7 +93,7 @@ function transformSuggestToField<T extends SelectOptionProps>({
 
 // # Components -------------------
 /**
- * Suggest component.
+ * Suggest component (standalone, not bound to Formik).
  * @param {SuggestProps<T>} props
  * @returns {JSX.Element}
  */
@@ -188,7 +190,7 @@ export function Suggest<T extends SuggestOptionProps>(props: SuggestProps<T>) {
     },
     [_labelAccessor, _textAccessor, _valueAccessor]
   );
-  // Detarmines whether the given item is selected.
+  // Determines whether the given item is selected.
   const isItemSelected = useCallback(
     (_item: T) => {
       const value = getAccessor(_valueAccessor, _item);
@@ -222,31 +224,36 @@ export function Suggest<T extends SuggestOptionProps>(props: SuggestProps<T>) {
       onItemSelect={handleItemSelected}
       itemPredicate={itemPredicate}
       itemsEqual={isItemEqual}
-      {...transformSuggestToField(props)}
+      {...transformSuggestProps(props)}
       itemRenderer={localItemRenderer}
     />
   );
 }
 
 /**
- * Binds formik field to suggest Blueprint field.
+ * Internal component that bridges Formik field props to Suggest props.
  * @param {FieldToSuggestProps<T>} props
  * @returns {JSX.Element}
  */
 function FieldToSuggest<T extends SuggestOptionProps>(
   props: FieldToSuggestProps<T>
 ) {
-  return <Suggest {...transformSuggestSelectToField(props)} />;
+  return <Suggest {...transformFieldToSuggestProps(props)} />;
 }
 
 /**
- * Suggest field binded to Formik.
+ * Suggest component bound to Formik.
  * @exports
- * @param {SuggestFieldProps<T>} props
+ * @param {FormikSuggestProps<T>} props
  * @returns {JSX.Element}
  */
-export function SuggestField<T extends SuggestOptionProps>(
-  props: SuggestFieldProps<T>
+export function FormikSuggest<T extends SuggestOptionProps>(
+  props: FormikSuggestProps<T>
 ): JSX.Element {
   return <Field {...props} component={FieldToSuggest} />;
 }
+
+/**
+ * @deprecated Use FormikSuggest instead. This alias is provided for backwards compatibility.
+ */
+export const SuggestField = FormikSuggest;
