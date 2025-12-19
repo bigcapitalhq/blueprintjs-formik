@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import React, { useMemo, useCallback, ComponentType } from 'react';
 import {
   MultiSelect as BPMultiSelect,
   MultiSelectProps as BPMultiSelectProps,
@@ -13,20 +13,14 @@ import {
   FormikItemRendererState,
   SelectOptionProps,
 } from './types';
+import { useUncontrolled } from '../utils/use-uncontrolled';
 
 // # Types -------------------
-interface FormikMultiSelectProps<T>
-  extends Omit<
-    BPMultiSelectProps<T>,
-    'itemRenderer' | 'onItemSelect' | 'selectedItems' | 'tagRenderer'
-  >,
-  FormikMultiSelectExtraProps<T> {
+interface MultiSelectCommonProps<T> {
   itemRenderer?: FormikItemRenderer<T>;
   onItemSelect?: (item: T, event?: React.SyntheticEvent<HTMLElement>) => void;
   selectedItems?: T[];
   tagRenderer?: (item: T) => React.ReactNode;
-}
-interface FormikMultiSelectExtraProps<T> {
   valueAccessor?: string;
   labelAccessor?: string;
   textAccessor?: string;
@@ -37,33 +31,43 @@ interface FormikMultiSelectExtraProps<T> {
     event?: React.SyntheticEvent<HTMLElement>
   ) => void;
 }
-interface MultiSelectProps<T>
-  extends FormikMultiSelectProps<T>,
-  Omit<FieldConfig, 'children' | 'as' | 'component'> {
+
+interface BaseMultiSelectProps<T>
+  extends Omit<
+    BPMultiSelectProps<T>,
+    'itemRenderer' | 'onItemSelect' | 'selectedItems' | 'tagRenderer'
+  >,
+  MultiSelectCommonProps<T> { }
+
+export interface MultiSelectProps<T> extends BaseMultiSelectProps<T> {
+  selectedValues?: (string | number)[];
+  initialSelectedValues?: (string | number)[];
+  onValuesChange?: (values: (string | number)[]) => void;
+}
+
+export interface FormikMultiSelectProps<T>
+  extends Omit<FieldConfig, 'children' | 'as' | 'component'>,
+  BaseMultiSelectProps<T> {
   name: string;
 }
-interface FieldToMultiSelectProps<T>
-  extends FormikMultiSelectProps<T>,
-  FieldProps {
-  children: React.ReactNode;
-}
+
+interface FieldToMultiSelectProps<T> extends BaseMultiSelectProps<T>, FieldProps { }
 
 // # Utils -------------------
 /**
- * Transforms multi-select to field.
+ * Transforms Formik field props to MultiSelect props.
  */
-function transformMutliSelectToField<T extends SelectOptionProps>({
+function transformFieldToMultiSelectProps<T extends SelectOptionProps>({
   field: { onBlur: onFieldBlur, ...field },
   form: { touched, errors, ...form },
   meta,
-  valueAccessor,
-  labelAccessor,
   ...props
-}: FieldToMultiSelectProps<T>): FormikMultiSelectProps<T> & {
-  children: React.ReactNode;
-} {
+}: FieldToMultiSelectProps<T>): MultiSelectProps<T> {
   return {
-    ...props,
+    selectedValues: field.value,
+    onValuesChange: (values) => {
+      form.setFieldValue(field.name, values);
+    },
     tagInputProps: {
       ...props?.tagInputProps,
       inputProps: {
@@ -71,16 +75,19 @@ function transformMutliSelectToField<T extends SelectOptionProps>({
         ...props?.tagInputProps?.inputProps,
       },
     },
+    ...props,
   };
 }
 
 // # Components -------------------
 /**
- * Binds formik field to multi-select blueprint field.
+ * MultiSelect component (standalone, not bound to Formik).
+ * @param {MultiSelectProps<T>} props
+ * @returns {JSX.Element}
  */
-function FieldToMutliSelect<T extends SelectOptionProps>({
-  ...props
-}: FieldToMultiSelectProps<T>): JSX.Element {
+export function MultiSelect<T extends SelectOptionProps>(
+  props: MultiSelectProps<T>
+): JSX.Element {
   const {
     valueAccessor = 'value',
     labelAccessor = 'label',
@@ -88,34 +95,28 @@ function FieldToMutliSelect<T extends SelectOptionProps>({
     tagAccessor = 'text',
     noResultsText,
     onCreateItemSelect,
+    selectedValues,
+    initialSelectedValues,
+    onValuesChange,
+    itemRenderer: customItemRenderer,
+    ...restProps
   } = props;
 
-  // Local selected values.
-  const [localSelected, setLocalSelected] = useState<(string | number)[]>(
-    props.field.value
-  );
-  // Sync the field value with the local selected state.
-  useEffect(() => {
-    if (props.field.value && localSelected) {
-      setLocalSelected(props.field.value);
-    }
-  }, [props.field.value, localSelected]);
-
-  // Updates the local selected state and the formik field.
-  const updateLocalAndField = useCallback(
-    (newLocalSelected: (string | number)[]) => {
-      props.form.setFieldValue(props.field.name, newLocalSelected);
-      setLocalSelected(newLocalSelected);
-    },
-    [props.field.name, props.form]
-  );
+  // Local selected values state
+  const [localSelected, handleValuesChange] = useUncontrolled<(string | number)[]>({
+    value: selectedValues,
+    initialValue: initialSelectedValues,
+    finalValue: [],
+    onChange: onValuesChange,
+  });
 
   // Items by value.
-  const itemsByValue = useMemo<{ [key: string | number]: any }>(
-    () => mapItemsById(props.items, valueAccessor),
+  const itemsByValue = useMemo(
+    () => mapItemsById(props.items, valueAccessor) as { [key: string | number]: T },
     [props.items, valueAccessor]
   );
-  // Detarmines whether the given item is selected.
+
+  // Determines whether the given item is selected.
   const isItemSelected = useCallback(
     (item: T) => {
       const value = getAccessor(valueAccessor, item);
@@ -123,6 +124,7 @@ function FieldToMutliSelect<T extends SelectOptionProps>({
     },
     [localSelected, valueAccessor]
   );
+
   // Handles item select.
   const handleItemSelect = useCallback(
     (item: T, event?: React.SyntheticEvent<HTMLElement>) => {
@@ -132,27 +134,29 @@ function FieldToMutliSelect<T extends SelectOptionProps>({
       if (typeof value === 'undefined') {
         onCreateItemSelect && onCreateItemSelect(item, event);
       } else if (!isSelected) {
-        updateLocalAndField([...localSelected, value]);
+        handleValuesChange([...localSelected, value]);
       }
     },
     [
       localSelected,
       valueAccessor,
-      updateLocalAndField,
+      handleValuesChange,
       isItemSelected,
       onCreateItemSelect,
     ]
   );
+
   // Handle item tag delete.
   const handleItemRemove = useCallback(
     (deleteItem: T, index: number) => {
       const newLocalSelected = localSelected.filter(
         (item) => item !== getAccessor(valueAccessor, deleteItem)
       );
-      updateLocalAndField(newLocalSelected);
+      handleValuesChange(newLocalSelected);
     },
-    [localSelected, valueAccessor, updateLocalAndField]
+    [localSelected, valueAccessor, handleValuesChange]
   );
+
   // Computed the selected items from selected ids.
   const selectedItems = useMemo(() => {
     return localSelected
@@ -188,32 +192,37 @@ function FieldToMutliSelect<T extends SelectOptionProps>({
     },
     [labelAccessor, textAccessor, valueAccessor]
   );
+
   // Override `itemRenderer` to add extra properties.
   const localItemRenderer = useCallback(
-    (item: any, itemProps: IItemRendererProps) => {
+    (item: T, itemProps: IItemRendererProps) => {
       const isSelected = isItemSelected(item);
 
-      return props.itemRenderer
-        ? props.itemRenderer(item, itemProps, { isSelected })
+      return customItemRenderer
+        ? customItemRenderer(item, itemProps, { isSelected })
         : defaultItemRenderer(item, itemProps, { isSelected });
     },
-    [defaultItemRenderer, isItemSelected, props]
+    [defaultItemRenderer, isItemSelected, customItemRenderer]
   );
-  // Item predicator for searching.
-  const itemPredicate: ItemPredicate<T> = (query, item, _index, exactMatch) => {
-    const normalizedTitle = item.label?.toLowerCase();
-    const normalizedQuery = query.toLowerCase();
 
-    if (exactMatch) {
-      return normalizedTitle === normalizedQuery;
-    } else {
-      return (
-        `${item.label} ${normalizedTitle} ${item.text}`.indexOf(
-          normalizedQuery
-        ) >= 0
-      );
-    }
-  };
+  // Item predicate for searching.
+  const itemPredicate: ItemPredicate<T> = useCallback(
+    (query, item, _index, exactMatch) => {
+      const text = getAccessor(textAccessor, item);
+      const label = getAccessor(labelAccessor, item);
+      const normalizedText =
+        'string' === typeof text ? text?.toLowerCase() : '';
+      const normalizedQuery = query.toLowerCase();
+
+      if (exactMatch) {
+        return normalizedText === normalizedQuery;
+      } else {
+        return `${normalizedText} ${label}`.indexOf(normalizedQuery) >= 0;
+      }
+    },
+    [textAccessor, labelAccessor]
+  );
+
   // Tag value mapper.
   const tagRenderer = (item: T) => getAccessor(tagAccessor, item);
 
@@ -229,19 +238,78 @@ function FieldToMutliSelect<T extends SelectOptionProps>({
       itemPredicate={itemPredicate}
       tagRenderer={tagRenderer}
       noResults={noResults}
-      {...transformMutliSelectToField(props)}
       itemRenderer={localItemRenderer}
+      {...restProps}
     />
   );
 }
 
+// # HOC -----------------
 /**
- * Multi select binded with Formik.
- * @param {MultiSelectProps<T>} props
+ * Props for the Formik-bound MultiSelect component created by withFormikMultiSelect.
+ */
+export type WithFormikMultiSelectProps<T> = Omit<
+  MultiSelectProps<T>,
+  'selectedValues' | 'onValuesChange' | 'initialSelectedValues'
+> &
+  Omit<FieldConfig, 'children' | 'as' | 'component'> & {
+    name: string;
+  };
+
+/**
+ * Higher-Order Component that wraps a MultiSelect component to bind it with Formik.
+ *
+ * @example
+ * ```tsx
+ * const FormikBoundMultiSelect = withFormikMultiSelect(MultiSelect);
+ *
+ * // Usage in a Formik form:
+ * <FormikBoundMultiSelect
+ *   name="tags"
+ *   items={tags}
+ *   valueAccessor="id"
+ *   labelAccessor="name"
+ *   textAccessor="name"
+ * />
+ * ```
+ *
+ * @param WrappedComponent - The MultiSelect component to wrap
+ * @returns A new component that is bound to Formik
+ */
+export function withFormikMultiSelect<T extends SelectOptionProps>(
+  WrappedComponent: ComponentType<MultiSelectProps<T>>
+) {
+  // Internal component that bridges Formik field props to the wrapped MultiSelect
+  function FieldToWrappedMultiSelect(
+    props: BaseMultiSelectProps<T> & FieldProps
+  ): JSX.Element {
+    const multiSelectProps = transformFieldToMultiSelectProps(props);
+    return <WrappedComponent {...multiSelectProps} />;
+  }
+
+  // The HOC component that uses Field
+  function FormikBoundMultiSelect(props: WithFormikMultiSelectProps<T>): JSX.Element {
+    return <Field {...props} component={FieldToWrappedMultiSelect} />;
+  }
+
+  // Set display name for debugging
+  const wrappedComponentName =
+    WrappedComponent.displayName || WrappedComponent.name || 'Component';
+  FormikBoundMultiSelect.displayName = `withFormikMultiSelect(${wrappedComponentName})`;
+
+  return FormikBoundMultiSelect;
+}
+
+/**
+ * MultiSelect component bound to Formik.
+ * Built using withFormikMultiSelect HOC.
+ * @exports
+ * @param {FormikMultiSelectProps<T>} props
  * @returns {JSX.Element}
  */
-export function MultiSelect<T extends SelectOptionProps>({
-  ...props
-}: MultiSelectProps<T>) {
-  return <Field {...props} component={FieldToMutliSelect} />;
-}
+export const FormikMultiSelect = withFormikMultiSelect(MultiSelect);
+
+/**
+ * @deprecated Use FormikMultiSelect instead. This alias is provided for backwards compatibility.
+ */
+export const MultiSelectField = FormikMultiSelect;

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, ComponentType } from 'react';
 import { Field, FieldConfig, FieldProps } from 'formik';
 import {
   Suggest as BPSuggest,
@@ -9,7 +9,7 @@ import {
 import { MenuItem } from '@blueprintjs/core';
 import { getAccessor } from './utils';
 import { FormikItemRendererState, SelectOptionProps } from './types';
-import { useUncontrolled } from '../../../common/use-uncontrolled';
+import { useUncontrolled } from '../utils/use-uncontrolled';
 
 // # Types -----------------
 interface SuggestOptionProps extends SelectOptionProps { }
@@ -230,28 +230,69 @@ export function Suggest<T extends SuggestOptionProps>(props: SuggestProps<T>) {
   );
 }
 
+// # HOC -----------------
 /**
- * Internal component that bridges Formik field props to Suggest props.
- * @param {FieldToSuggestProps<T>} props
- * @returns {JSX.Element}
+ * Props for the Formik-bound Suggest component created by withFormikSuggest.
  */
-function FieldToSuggest<T extends SuggestOptionProps>(
-  props: FieldToSuggestProps<T>
+export type WithFormikSuggestProps<T> = Omit<
+  SuggestProps<T>,
+  'selectedValue' | 'onValueChange' | 'initialSelectedValue'
+> &
+  Omit<FieldConfig, 'children' | 'as' | 'component'> & {
+    name: string;
+  };
+
+/**
+ * Higher-Order Component that wraps a Suggest component to bind it with Formik.
+ *
+ * @example
+ * ```tsx
+ * const FormikBoundSuggest = withFormikSuggest(Suggest);
+ *
+ * // Usage in a Formik form:
+ * <FormikBoundSuggest
+ *   name="movie"
+ *   items={movies}
+ *   valueAccessor="id"
+ *   labelAccessor="year"
+ *   textAccessor="title"
+ * />
+ * ```
+ *
+ * @param WrappedComponent - The Suggest component to wrap
+ * @returns A new component that is bound to Formik
+ */
+export function withFormikSuggest<T extends SuggestOptionProps>(
+  WrappedComponent: ComponentType<SuggestProps<T>>
 ) {
-  return <Suggest {...transformFieldToSuggestProps(props)} />;
+  // Internal component that bridges Formik field props to the wrapped Suggest
+  function FieldToWrappedSuggest(
+    props: BaseSuggestProps<T> & FieldProps
+  ): JSX.Element {
+    const suggestProps = transformFieldToSuggestProps(props);
+    return <WrappedComponent {...suggestProps} />;
+  }
+  // The HOC component that uses Field
+  function FormikBoundSuggest(props: WithFormikSuggestProps<T>): JSX.Element {
+    return <Field {...props} component={FieldToWrappedSuggest} />;
+  }
+
+  // Set display name for debugging
+  const wrappedComponentName =
+    WrappedComponent.displayName || WrappedComponent.name || 'Component';
+  FormikBoundSuggest.displayName = `withFormikSuggest(${wrappedComponentName})`;
+
+  return FormikBoundSuggest;
 }
 
 /**
  * Suggest component bound to Formik.
+ * Built using withFormikSuggest HOC.
  * @exports
  * @param {FormikSuggestProps<T>} props
  * @returns {JSX.Element}
  */
-export function FormikSuggest<T extends SuggestOptionProps>(
-  props: FormikSuggestProps<T>
-): JSX.Element {
-  return <Field {...props} component={FieldToSuggest} />;
-}
+export const FormikSuggest = withFormikSuggest(Suggest);
 
 /**
  * @deprecated Use FormikSuggest instead. This alias is provided for backwards compatibility.

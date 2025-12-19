@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Form, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { FormValues } from './FormValues';
 import { FormGroup } from '../packages/core/src';
-import { MultiSelect, SelectOptionProps } from '../packages/select/src';
+import {
+  MultiSelect,
+  FormikMultiSelect,
+  SelectOptionProps,
+} from '../packages/select/src';
 
 const FormValidation = Yup.object().shape({
   firstName: Yup.string()
@@ -37,43 +41,69 @@ export const TOP_100_FILMS: IFilm[] = [
 ];
 
 export const MultiSelectPage = () => {
+  // Standalone MultiSelect state
+  const [standaloneValues, setStandaloneValues] = useState<number[]>([
+    1994, 1972,
+  ]);
+
   return (
     <article>
-      <Formik
-        initialValues={{
-          number: [],
-        }}
-        validationSchema={FormValidation}
-        onSubmit={(
-          values: Values,
-          { setSubmitting }: FormikHelpers<Values>
-        ) => {}}
-      >
-        {({ values, setFieldValue }) => (
-          <Form>
-            <FormGroup name={'number'} label={'Number'}>
-              <MultiSelect
-                items={TOP_100_FILMS}
-                name={'number'}
-                valueAccessor={'year'}
-                textAccessor={'title'}
-                tagAccessor={'title'}
-              />
-            </FormGroup>
+      {/* Standalone MultiSelect (without Formik) */}
+      <section style={{ marginBottom: '2rem' }}>
+        <h3>Standalone MultiSelect (without Formik)</h3>
+        <MultiSelect
+          items={TOP_100_FILMS}
+          selectedValues={standaloneValues}
+          onValuesChange={(values) => setStandaloneValues(values as number[])}
+          valueAccessor={'year'}
+          textAccessor={'title'}
+          tagAccessor={'title'}
+        />
+        <p style={{ marginTop: '0.5rem' }}>
+          Selected values:{' '}
+          <strong>{standaloneValues.join(', ') || 'None'}</strong>
+        </p>
+      </section>
 
-            <button
-              onClick={() => {
-                setFieldValue('number', [1994]);
-              }}
-            >
-              Control from outside
-            </button>
+      {/* FormikMultiSelect (with Formik) */}
+      <section>
+        <h3>FormikMultiSelect (with Formik)</h3>
+        <Formik<Values>
+          initialValues={{
+            number: [],
+          }}
+          validationSchema={FormValidation}
+          onSubmit={(
+            values: Values,
+            { setSubmitting }: FormikHelpers<Values>
+          ) => { }}
+        >
+          {({ values, setFieldValue }) => (
+            <Form>
+              <FormGroup name={'number'} label={'Number'}>
+                <FormikMultiSelect
+                  items={TOP_100_FILMS}
+                  name={'number'}
+                  valueAccessor={'year'}
+                  textAccessor={'title'}
+                  tagAccessor={'title'}
+                />
+              </FormGroup>
 
-            <button type="submit">Submit</button>
-            <FormValues values={values} />
-          </Form>
-        )}
-      </Formik>
+              <button
+                onClick={() => {
+                  setFieldValue('number', [1994]);
+                }}
+              >
+                Control from outside
+              </button>
+
+              <button type="submit">Submit</button>
+              <FormValues values={values} />
+            </Form>
+          )}
+        </Formik>
+      </section>
     </article>
   );
 };
