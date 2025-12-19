@@ -17,6 +17,7 @@ import { EditableTextPage } from './EditableTextPage';
 import { DateInputPage } from './DateInputPage';
 import { SuggestPage } from './SuggestPage';
 import { TimezoneSelectPage } from './TimezoneSelectPage';
+import { MultiSelectPage } from './MultiSelectPage';
 
 export default {
   title: 'Example/Page',
@@ -38,3 +39,4 @@ export const EditableText = EditableTextPage.bind({});
 export const Suggest = SuggestPage.bind({});
 export const TimezoneSelect = TimezoneSelectPage.bind({});
 export const DateInput = DateInputPage.bind({});
+export const MultiSelect = MultiSelectPage.bind({});
