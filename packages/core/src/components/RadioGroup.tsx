@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { FieldConfig, FieldProps } from 'formik';
+import { FieldProps } from 'formik';
 import {
   RadioGroup as BPRadioGroup,
   RadioGroupProps as BPRadioGroupProps,
 } from '@blueprintjs/core';
-import { Field } from './FieldBase';
+import { Field, FieldBaseProps } from './FieldBase';
 
 export interface RadioGroupProps
   extends Omit<BPRadioGroupProps, 'onChange'>,
-  Omit<FieldConfig, 'component' | 'children'> {
+  Omit<FieldBaseProps, 'component' | 'children'> {
   name: string;
   onChange?: (event: React.FormEvent<HTMLInputElement>) => void;
 }

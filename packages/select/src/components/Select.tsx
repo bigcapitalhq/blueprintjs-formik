@@ -10,7 +10,8 @@ import {
   ItemPredicate,
   ItemRenderer,
 } from '@blueprintjs/select';
-import { Field, FieldProps, FieldConfig } from 'formik';
+import { Field, FieldProps } from 'formik';
+import { FieldBaseProps } from '@blueprintjs-formik/core';
 import { Accessor, SelectOptionProps } from './types';
 import { getAccessor } from './utils';
 import { useUncontrolled } from '../utils/use-uncontrolled';
@@ -49,7 +50,7 @@ export interface SelectProps<T> extends BaseSelectProps<T> {
 }
 
 export interface FormikSelectProps<T>
-  extends Omit<FieldConfig, 'children' | 'as' | 'component'>,
+  extends Omit<FieldBaseProps, 'children' | 'as' | 'component'>,
   BaseSelectProps<T> {
   name: string;
 }
@@ -224,7 +225,7 @@ export type WithFormikSelectProps<T> = Omit<
   SelectProps<T>,
   'selectedValue' | 'onValueChange' | 'initialSelectedValue'
 > &
-  Omit<FieldConfig, 'children' | 'as' | 'component'> & {
+  Omit<FieldBaseProps, 'children' | 'as' | 'component'> & {
     name: string;
   };
 

@@ -1,13 +1,14 @@
 import React from 'react';
-import { getIn, FieldConfig, FieldProps, Field } from 'formik';
+import { getIn, FieldProps, Field } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import {
   DateInput as BPDateInput,
   DateInputProps as BPDateInputProps,
 } from '@blueprintjs/datetime';
+import { FieldBaseProps } from '@blueprintjs-formik/core';
 
 export interface DateInputProps
-  extends Omit<FieldConfig, 'children' | 'component' | 'as'>,
+  extends Omit<FieldBaseProps, 'children' | 'component' | 'as'>,
   Omit<BPDateInputProps, 'value' | 'name'> {
   name: string;
   formFormatDate?: (date: Date, locale?: string) => string;

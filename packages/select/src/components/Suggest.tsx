@@ -1,5 +1,6 @@
 import React, { useCallback, ComponentType } from 'react';
-import { Field, FieldConfig, FieldProps } from 'formik';
+import { Field, FieldProps } from 'formik';
+import { FieldBaseProps } from '@blueprintjs-formik/core';
 import {
   Suggest as BPSuggest,
   SuggestProps as BPSuggestProps,
@@ -51,7 +52,7 @@ export interface SuggestProps<T> extends BaseSuggestProps<T> {
 }
 
 export interface FormikSuggestProps<T>
-  extends Omit<FieldConfig, 'children' | 'as' | 'component'>,
+  extends Omit<FieldBaseProps, 'children' | 'as' | 'component'>,
   BaseSuggestProps<T> {
   name: string;
 }
@@ -238,7 +239,7 @@ export type WithFormikSuggestProps<T> = Omit<
   SuggestProps<T>,
   'selectedValue' | 'onValueChange' | 'initialSelectedValue'
 > &
-  Omit<FieldConfig, 'children' | 'as' | 'component'> & {
+  Omit<FieldBaseProps, 'children' | 'as' | 'component'> & {
     name: string;
   };
 

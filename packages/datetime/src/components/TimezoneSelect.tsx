@@ -1,13 +1,14 @@
 import React from 'react';
-import { getIn, FieldConfig, FieldProps, Field } from 'formik';
+import { getIn, FieldProps, Field } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import {
     TimezoneSelect as BPTimezoneSelect,
     TimezoneSelectProps as BPTimezoneSelectProps,
 } from '@blueprintjs/datetime2';
+import { FieldBaseProps } from '@blueprintjs-formik/core';
 
 export interface TimezoneSelectProps
-    extends Omit<FieldConfig, 'children' | 'component' | 'as'>,
+    extends Omit<FieldBaseProps, 'children' | 'component' | 'as'>,
     Omit<BPTimezoneSelectProps, 'value' | 'name' | 'onChange'> {
     name: string;
 }

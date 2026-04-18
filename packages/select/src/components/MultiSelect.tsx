@@ -6,7 +6,8 @@ import {
   ItemPredicate,
 } from '@blueprintjs/select';
 import { MenuItem } from '@blueprintjs/core';
-import { Field, FieldConfig, FieldProps } from 'formik';
+import { Field, FieldProps } from 'formik';
+import { FieldBaseProps } from '@blueprintjs-formik/core';
 import { getAccessor, mapItemsById } from './utils';
 import {
   FormikItemRenderer,
@@ -46,7 +47,7 @@ export interface MultiSelectProps<T> extends BaseMultiSelectProps<T> {
 }
 
 export interface FormikMultiSelectProps<T>
-  extends Omit<FieldConfig, 'children' | 'as' | 'component'>,
+  extends Omit<FieldBaseProps, 'children' | 'as' | 'component'>,
   BaseMultiSelectProps<T> {
   name: string;
 }
@@ -252,7 +253,7 @@ export type WithFormikMultiSelectProps<T> = Omit<
   MultiSelectProps<T>,
   'selectedValues' | 'onValuesChange' | 'initialSelectedValues'
 > &
-  Omit<FieldConfig, 'children' | 'as' | 'component'> & {
+  Omit<FieldBaseProps, 'children' | 'as' | 'component'> & {
     name: string;
   };
 
