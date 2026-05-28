@@ -2,12 +2,12 @@ import React, { useMemo, useCallback, ComponentType } from 'react';
 import {
   MultiSelect as BPMultiSelect,
   MultiSelectProps as BPMultiSelectProps,
-  IItemRendererProps,
+  ItemRendererProps as IItemRendererProps,
   ItemPredicate,
 } from '@blueprintjs/select';
 import { MenuItem } from '@blueprintjs/core';
-import { Field, FieldProps } from 'formik';
-import { FieldBaseProps } from '@blueprintjs-formik/core';
+import { FieldProps } from 'formik';
+import { FieldBaseProps, Field } from '@blueprintjs-formik/core';
 import { getAccessor, mapItemsById } from './utils';
 import {
   FormikItemRenderer,
@@ -280,16 +280,15 @@ export type WithFormikMultiSelectProps<T> = Omit<
 export function withFormikMultiSelect<T extends SelectOptionProps>(
   WrappedComponent: ComponentType<MultiSelectProps<T>>
 ) {
-  // Internal component that bridges Formik field props to the wrapped MultiSelect
-  function FieldToWrappedMultiSelect(
-    props: BaseMultiSelectProps<T> & FieldProps
-  ): JSX.Element {
-    const multiSelectProps = transformFieldToMultiSelectProps(props);
-    return <WrappedComponent {...multiSelectProps} />;
-  }
-
   // The HOC component that uses Field
   function FormikBoundMultiSelect(props: WithFormikMultiSelectProps<T>): JSX.Element {
+    const FieldToWrappedMultiSelect = (fieldProps: FieldProps): JSX.Element => {
+      const multiSelectProps = transformFieldToMultiSelectProps({
+        ...props,
+        ...fieldProps,
+      });
+      return <WrappedComponent {...multiSelectProps} />;
+    };
     return <Field {...props} component={FieldToWrappedMultiSelect} />;
   }
 

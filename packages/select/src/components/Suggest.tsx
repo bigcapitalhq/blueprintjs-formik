@@ -1,10 +1,10 @@
 import React, { useCallback, ComponentType } from 'react';
-import { Field, FieldProps } from 'formik';
-import { FieldBaseProps } from '@blueprintjs-formik/core';
+import { FieldProps } from 'formik';
+import { FieldBaseProps, Field } from '@blueprintjs-formik/core';
 import {
   Suggest as BPSuggest,
   SuggestProps as BPSuggestProps,
-  IItemRendererProps,
+  ItemRendererProps as IItemRendererProps,
   ItemPredicate,
 } from '@blueprintjs/select';
 import { MenuItem } from '@blueprintjs/core';
@@ -266,15 +266,15 @@ export type WithFormikSuggestProps<T> = Omit<
 export function withFormikSuggest<T extends SuggestOptionProps>(
   WrappedComponent: ComponentType<SuggestProps<T>>
 ) {
-  // Internal component that bridges Formik field props to the wrapped Suggest
-  function FieldToWrappedSuggest(
-    props: BaseSuggestProps<T> & FieldProps
-  ): JSX.Element {
-    const suggestProps = transformFieldToSuggestProps(props);
-    return <WrappedComponent {...suggestProps} />;
-  }
   // The HOC component that uses Field
   function FormikBoundSuggest(props: WithFormikSuggestProps<T>): JSX.Element {
+    const FieldToWrappedSuggest = (fieldProps: FieldProps): JSX.Element => {
+      const suggestProps = transformFieldToSuggestProps({
+        ...props,
+        ...fieldProps,
+      });
+      return <WrappedComponent {...suggestProps} />;
+    };
     return <Field {...props} component={FieldToWrappedSuggest} />;
   }
 

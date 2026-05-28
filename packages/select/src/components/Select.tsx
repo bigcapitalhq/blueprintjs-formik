@@ -10,8 +10,8 @@ import {
   ItemPredicate,
   ItemRenderer,
 } from '@blueprintjs/select';
-import { Field, FieldProps } from 'formik';
-import { FieldBaseProps } from '@blueprintjs-formik/core';
+import { FieldProps } from 'formik';
+import { FieldBaseProps, Field } from '@blueprintjs-formik/core';
 import { Accessor, SelectOptionProps } from './types';
 import { getAccessor } from './utils';
 import { useUncontrolled } from '../utils/use-uncontrolled';
@@ -252,16 +252,15 @@ export type WithFormikSelectProps<T> = Omit<
 export function withFormikSelect<T extends SelectOptionProps>(
   WrappedComponent: ComponentType<SelectProps<T>>
 ) {
-  // Internal component that bridges Formik field props to the wrapped Select
-  function FieldToWrappedSelect(
-    props: BaseSelectProps<T> & FieldProps
-  ): JSX.Element {
-    const selectProps = transformFieldToSelectProps(props);
-    return <WrappedComponent {...selectProps} />;
-  }
-
   // The HOC component that uses Field
   function FormikBoundSelect(props: WithFormikSelectProps<T>): JSX.Element {
+    const FieldToWrappedSelect = (fieldProps: FieldProps): JSX.Element => {
+      const selectProps = transformFieldToSelectProps({
+        ...props,
+        ...fieldProps,
+      });
+      return <WrappedComponent {...selectProps} />;
+    };
     return <Field {...props} component={FieldToWrappedSelect} />;
   }
 

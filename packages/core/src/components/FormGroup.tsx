@@ -1,23 +1,23 @@
 import React from 'react';
-import { FieldMetaProps, FieldInputProps, useField } from 'formik';
+import { FieldMetaProps, FieldInputProps, FormikProps } from 'formik';
 import {
   FormGroup as BPFormGroup,
   Intent,
   FormGroupProps as BPFormGroupProps,
 } from '@blueprintjs/core';
+import { Field, FieldBaseProps } from './FieldBase';
 
-export interface FormGroupProps extends BPFormGroupProps {
+export interface FormGroupProps extends BPFormGroupProps, Pick<FieldBaseProps, 'fastField'> {
   name: string;
   children: React.ReactElement;
 }
 
-/**
- * Transformes field props to form group.
- * @param   {Omit<FormGroupProps, "children">} props
- * @param   {FieldInputProps<any>} field
- * @param   {FieldMetaProps<any>} meta
- * @returns {PBFormGroupProps}
- */
+interface FieldToFormGroupProps extends Omit<FormGroupProps, 'fastField'> {
+  field: FieldInputProps<any>;
+  meta: FieldMetaProps<any>;
+  form: FormikProps<any>;
+}
+
 const fieldToFormGroup = (
   props: Omit<FormGroupProps, 'children'>,
   field: FieldInputProps<any>,
@@ -33,18 +33,17 @@ const fieldToFormGroup = (
   };
 };
 
+const FieldToFormGroup = ({ field, meta, form, children, ...props }: FieldToFormGroupProps) => (
+  <BPFormGroup {...fieldToFormGroup(props, field, meta)}>
+    {children}
+  </BPFormGroup>
+);
+
 /**
  * Form group.
  * @param   {FormGroupProps}
  * @returns {React.JSX}
  */
-export function FormGroup({ children, ...props }: FormGroupProps): JSX.Element {
-  const [field, meta] = useField(props.name);
-
-  return (
-    <BPFormGroup
-      {...fieldToFormGroup(props, field, meta)}
-      children={children}
-    />
-  );
+export function FormGroup({ fastField, ...props }: FormGroupProps): JSX.Element {
+  return <Field {...props} fastField={fastField} component={FieldToFormGroup as React.ComponentType<any>} />;
 }

@@ -30,8 +30,8 @@ export const HTMLSelectPage = () => {
       >
         {({ values }) => (
           <Form>
-            <FormGroup name={'value'} label={'Long text'}>
-              <HTMLSelect name={'value'} options={['mohamed', 'jesus']} />
+            <FormGroup name={'value'} label={'Long text'} fastField>
+              <HTMLSelect name={'value'} options={['mohamed', 'jesus']} fastField />
             </FormGroup>
 
             <FormGroup

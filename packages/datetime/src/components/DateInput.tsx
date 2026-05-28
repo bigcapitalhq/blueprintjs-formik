@@ -1,11 +1,11 @@
 import React from 'react';
-import { getIn, FieldProps, Field } from 'formik';
+import { getIn, FieldProps } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import {
   DateInput as BPDateInput,
   DateInputProps as BPDateInputProps,
 } from '@blueprintjs/datetime';
-import { FieldBaseProps } from '@blueprintjs-formik/core';
+import { FieldBaseProps, Field } from '@blueprintjs-formik/core';
 
 export interface DateInputProps
   extends Omit<FieldBaseProps, 'children' | 'component' | 'as'>,
@@ -61,21 +61,13 @@ function fieldToDateInput({
 }
 
 /**
- * Transformes field props to date input props.
- * @param {FieldToDateInput} props - Field props
- * @returns {JSX.Element}
- */
-function FieldToDatePicker(props: FieldToDateInput): JSX.Element {
-  return <BPDateInput {...fieldToDateInput(props)} />;
-}
-
-/**
  * Date input Blueprint component binded with Formik.
  * @param {DateInputProps} props - Date input props
  * @returns {JSX.Element}
  */
 export function DateInput({ ...props }: DateInputProps): JSX.Element {
-  return (
-    <Field {...props} component={FieldToDatePicker} />
+  const FieldToDatePicker = (fieldProps: FieldProps): JSX.Element => (
+    <BPDateInput {...fieldToDateInput({ ...fieldProps, ...props })} />
   );
+  return <Field {...props} component={FieldToDatePicker} />;
 }
