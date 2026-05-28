@@ -1,26 +1,38 @@
-import typescript from 'rollup-plugin-typescript2';
+import typescript from '@rollup/plugin-typescript';
 import pkg from './package.json';
 
-const external = ['react'];
+const external = ['react'].concat(Object.keys(pkg.dependencies || []));
 
 const config = [
   {
     input: 'src/index.ts',
+    external,
     plugins: [
       typescript({
-        tsconfig: 'tsconfig.json',
+        tsconfig: './tsconfig.json',
+        outDir: './dist',
+        declaration: true,
+        declarationDir: './dist',
       }),
     ],
-    external: external.concat(Object.keys(pkg.dependencies || [])),
-    output: [
-      { dir: './dist', format: 'cjs', sourcemap: true },
-      {
-        dir: './dist/esm',
-        format: 'es',
-        sourcemap: true,
-        preserveModules: true,
-      },
+    output: { dir: './dist', format: 'cjs', sourcemap: true },
+  },
+  {
+    input: 'src/index.ts',
+    external,
+    plugins: [
+      typescript({
+        tsconfig: './tsconfig.json',
+        outDir: './dist/esm',
+        declaration: false,
+      }),
     ],
+    output: {
+      dir: './dist/esm',
+      format: 'es',
+      sourcemap: true,
+      preserveModules: true,
+    },
   },
 ];
 
