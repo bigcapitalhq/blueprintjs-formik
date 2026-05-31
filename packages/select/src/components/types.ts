@@ -1,4 +1,4 @@
-import { IItemRendererProps } from '@blueprintjs/select';
+import { ItemRendererProps } from '@blueprintjs/select';
 
 export interface SelectOptionProps {
   disabled?: boolean;
@@ -19,7 +19,7 @@ export interface FormikItemRendererState {
 
 export type FormikItemRenderer<T> = (
   item: T,
-  itemProps: IItemRendererProps,
+  itemProps: ItemRendererProps,
   { isSelected }: FormikItemRendererState
 ) => JSX.Element | null;
 
