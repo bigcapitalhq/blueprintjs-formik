@@ -81,12 +81,13 @@ export const MultiSelectPage = () => {
           {({ values, setFieldValue }) => (
             <Form>
               <FormGroup name={'number'} label={'Number'}>
-                <FormikMultiSelect
+                <FormikMultiSelect<IFilm>
                   items={TOP_100_FILMS}
                   name={'number'}
                   valueAccessor={'year'}
                   textAccessor={'title'}
                   tagAccessor={'title'}
+                  itemPredicate={(value: string, item: IFilm) => item.year.toString() === value}
                 />
               </FormGroup>
 

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Formik, Form, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { FormValues } from './FormValues';
-
 import { FormGroup } from '../packages/core/src';
 import { SelectOptionProps, Suggest, FormikSuggest } from '../packages/select/src';
 
@@ -81,6 +80,7 @@ export const SuggestPage = () => {
                   valueAccessor={'year'}
                   labelAccessor={'year'}
                   textAccessor={'title'}
+                  itemPredicate={(value: string, item: IFilm) => item.year.toString() === value}
                 />
               </FormGroup>
 

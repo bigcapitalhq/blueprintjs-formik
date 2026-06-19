@@ -255,7 +255,7 @@ export function withFormikSelect<T extends SelectOptionProps>(
   // The HOC component that uses Field
   function FormikBoundSelect(props: WithFormikSelectProps<T>): JSX.Element {
     const FieldToWrappedSelect = (fieldProps: FieldProps): JSX.Element => {
-      const selectProps = transformFieldToSelectProps({
+      const selectProps = transformFieldToSelectProps<T>({
         ...props,
         ...fieldProps,
       });
@@ -279,7 +279,8 @@ export function withFormikSelect<T extends SelectOptionProps>(
  * @param {FormikSelectProps<T>} props
  * @returns {JSX.Element}
  */
-export const FormikSelect = withFormikSelect(Select);
+export const FormikSelect = <T extends SelectOptionProps = SelectOptionProps>(props: WithFormikSelectProps<T>) =>
+  withFormikSelect<T>(Select)(props);
 
 /**
  * @deprecated Use FormikSelect instead. This alias is provided for backwards compatibility.
