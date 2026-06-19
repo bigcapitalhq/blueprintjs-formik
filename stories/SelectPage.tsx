@@ -6,6 +6,7 @@ import { FormValues } from './FormValues';
 import { FormGroup } from '../packages/core/src';
 import { Select, FormikSelect, SelectOptionProps } from '../packages/select/src';
 
+
 const FormValidation = Yup.object().shape({
   firstName: Yup.string()
     .min(2, 'Too Short!')
@@ -75,12 +76,13 @@ export const SelectPage = () => {
           {({ values }) => (
             <Form>
               <FormGroup name={'number'} label={'Number'}>
-                <FormikSelect
+                <FormikSelect<IFilm>
                   items={TOP_100_FILMS}
                   name={'number'}
                   valueAccessor={'year'}
                   labelAccessor={'year'}
                   textAccessor={'title'}
+                  itemPredicate={(value: string, item: IFilm) => item.year.toString() === value}
                 />
               </FormGroup>
 

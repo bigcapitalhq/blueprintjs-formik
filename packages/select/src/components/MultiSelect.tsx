@@ -301,13 +301,13 @@ export function withFormikMultiSelect<T extends SelectOptionProps>(
 }
 
 /**
- * MultiSelect component bound to Formik.
- * Built using withFormikMultiSelect HOC.
+ * MultiSelect component bound to Formik. Built using withFormikMultiSelect HOC.
  * @exports
  * @param {FormikMultiSelectProps<T>} props
  * @returns {JSX.Element}
  */
-export const FormikMultiSelect = withFormikMultiSelect(MultiSelect);
+export const FormikMultiSelect = <T extends SelectOptionProps = SelectOptionProps>(props: WithFormikMultiSelectProps<T>) =>
+  withFormikMultiSelect<T>(MultiSelect)(props);
 
 /**
  * @deprecated Use FormikMultiSelect instead. This alias is provided for backwards compatibility.
