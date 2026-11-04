@@ -266,16 +266,23 @@ export type WithFormikSuggestProps<T> = Omit<
 export function withFormikSuggest<T extends SuggestOptionProps>(
   WrappedComponent: ComponentType<SuggestProps<T>>
 ) {
+  // Bridges Formik field props to the wrapped Suggest. It must be created once
+  // per HOC call, never inside a render: a new function on every render is a
+  // new component type to React, which remounts the suggest, closing its
+  // popover and losing the click that caused the re-render.
+  function FieldToWrappedSuggest(props: FieldToSuggestProps<T>): JSX.Element {
+    const suggestProps = transformFieldToSuggestProps<T>(props);
+    return <WrappedComponent {...suggestProps} />;
+  }
+
   // The HOC component that uses Field
   function FormikBoundSuggest(props: WithFormikSuggestProps<T>): JSX.Element {
-    const FieldToWrappedSuggest = (fieldProps: FieldProps): JSX.Element => {
-      const suggestProps = transformFieldToSuggestProps<T>({
-        ...props,
-        ...fieldProps,
-      });
-      return <WrappedComponent {...suggestProps} />;
-    };
-    return <Field {...props} component={FieldToWrappedSuggest} />;
+    return (
+      <Field
+        {...props}
+        component={FieldToWrappedSuggest as ComponentType<FieldProps>}
+      />
+    );
   }
 
   // Set display name for debugging
@@ -293,7 +300,13 @@ export function withFormikSuggest<T extends SuggestOptionProps>(
  * @param {FormikSuggestProps<T>} props
  * @returns {JSX.Element}
  */
-export const FormikSuggest = <T extends SelectOptionProps = SelectOptionProps>(props: WithFormikSuggestProps<T>) => withFormikSuggest<T>(Suggest)(props);
+// Built once at module level (see FieldToWrappedSuggest), then typed as a
+// generic component so the option type T still reaches consumers.
+export const FormikSuggest = withFormikSuggest(Suggest) as <
+  T extends SelectOptionProps = SelectOptionProps
+>(
+  props: WithFormikSuggestProps<T>
+) => JSX.Element;
 
 /**
  * @deprecated Use FormikSuggest instead. This alias is provided for backwards compatibility.
