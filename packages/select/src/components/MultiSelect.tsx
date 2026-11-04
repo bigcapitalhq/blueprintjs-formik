@@ -280,16 +280,25 @@ export type WithFormikMultiSelectProps<T> = Omit<
 export function withFormikMultiSelect<T extends SelectOptionProps>(
   WrappedComponent: ComponentType<MultiSelectProps<T>>
 ) {
+  // Bridges Formik field props to the wrapped MultiSelect. It must be created
+  // once per HOC call, never inside a render: a new function on every render
+  // is a new component type to React, which remounts the multi-select,
+  // closing its popover and clearing its query after each pick.
+  function FieldToWrappedMultiSelect(
+    props: FieldToMultiSelectProps<T>
+  ): JSX.Element {
+    const multiSelectProps = transformFieldToMultiSelectProps<T>(props);
+    return <WrappedComponent {...multiSelectProps} />;
+  }
+
   // The HOC component that uses Field
   function FormikBoundMultiSelect(props: WithFormikMultiSelectProps<T>): JSX.Element {
-    const FieldToWrappedMultiSelect = (fieldProps: FieldProps): JSX.Element => {
-      const multiSelectProps = transformFieldToMultiSelectProps({
-        ...props,
-        ...fieldProps,
-      });
-      return <WrappedComponent {...multiSelectProps} />;
-    };
-    return <Field {...props} component={FieldToWrappedMultiSelect} />;
+    return (
+      <Field
+        {...props}
+        component={FieldToWrappedMultiSelect as ComponentType<FieldProps>}
+      />
+    );
   }
 
   // Set display name for debugging
@@ -306,8 +315,13 @@ export function withFormikMultiSelect<T extends SelectOptionProps>(
  * @param {FormikMultiSelectProps<T>} props
  * @returns {JSX.Element}
  */
-export const FormikMultiSelect = <T extends SelectOptionProps = SelectOptionProps>(props: WithFormikMultiSelectProps<T>) =>
-  withFormikMultiSelect<T>(MultiSelect)(props);
+// Built once at module level (see FieldToWrappedMultiSelect), then typed as a
+// generic component so the option type T still reaches consumers.
+export const FormikMultiSelect = withFormikMultiSelect(MultiSelect) as <
+  T extends SelectOptionProps = SelectOptionProps
+>(
+  props: WithFormikMultiSelectProps<T>
+) => JSX.Element;
 
 /**
  * @deprecated Use FormikMultiSelect instead. This alias is provided for backwards compatibility.

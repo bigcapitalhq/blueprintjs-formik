@@ -252,16 +252,23 @@ export type WithFormikSelectProps<T> = Omit<
 export function withFormikSelect<T extends SelectOptionProps>(
   WrappedComponent: ComponentType<SelectProps<T>>
 ) {
+  // Bridges Formik field props to the wrapped Select. It must be created once
+  // per HOC call, never inside a render: a new function on every render is a
+  // new component type to React, which remounts the select, closing its
+  // popover and losing the click that caused the re-render.
+  function FieldToWrappedSelect(props: FieldToSelectProps<T>): JSX.Element {
+    const selectProps = transformFieldToSelectProps<T>(props);
+    return <WrappedComponent {...selectProps} />;
+  }
+
   // The HOC component that uses Field
   function FormikBoundSelect(props: WithFormikSelectProps<T>): JSX.Element {
-    const FieldToWrappedSelect = (fieldProps: FieldProps): JSX.Element => {
-      const selectProps = transformFieldToSelectProps<T>({
-        ...props,
-        ...fieldProps,
-      });
-      return <WrappedComponent {...selectProps} />;
-    };
-    return <Field {...props} component={FieldToWrappedSelect} />;
+    return (
+      <Field
+        {...props}
+        component={FieldToWrappedSelect as ComponentType<FieldProps>}
+      />
+    );
   }
 
   // Set display name for debugging
@@ -279,8 +286,13 @@ export function withFormikSelect<T extends SelectOptionProps>(
  * @param {FormikSelectProps<T>} props
  * @returns {JSX.Element}
  */
-export const FormikSelect = <T extends SelectOptionProps = SelectOptionProps>(props: WithFormikSelectProps<T>) =>
-  withFormikSelect<T>(Select)(props);
+// Built once at module level (see FieldToWrappedSelect), then typed as a
+// generic component so the option type T still reaches consumers.
+export const FormikSelect = withFormikSelect(Select) as <
+  T extends SelectOptionProps = SelectOptionProps
+>(
+  props: WithFormikSelectProps<T>
+) => JSX.Element;
 
 /**
  * @deprecated Use FormikSelect instead. This alias is provided for backwards compatibility.
