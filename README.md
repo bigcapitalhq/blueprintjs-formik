@@ -20,6 +20,17 @@ For components of `@blueprintjs/select` library.
 npm install @blueprintjs-formik/select
 ```
 
+For Blueprint 6 date and timezone controls, use `@blueprintjs-formik/datetime-v6` with `@blueprintjs/datetime@6`. The existing `@blueprintjs-formik/datetime` package serves Blueprint 3–5.
+
+```tsx
+import { DateInput, TimezoneSelect } from '@blueprintjs-formik/datetime-v6';
+
+<DateInput name="invoiceDate" dateFnsFormat="yyyy-MM-dd" />
+<TimezoneSelect name="timezone" />
+```
+
+DateInput passes date-only strings through to Blueprint and writes the selected calendar day back to Formik as `YYYY-MM-DD`. With `timePrecision`, it stores Blueprint's ISO date-time string. Clearing the input stores an empty string.
+
 ## Why is Blueprintjs-formik so awesome?
 
 - Getting going quickly to develop sophisticated forms with Blueprintjs components and Formik.

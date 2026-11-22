@@ -257,6 +257,19 @@ export type WithFormikMultiSelectProps<T> = Omit<
     name: string;
   };
 
+function renderFormikMultiSelect<T extends SelectOptionProps>(
+  WrappedComponent: ComponentType<MultiSelectProps<T>>,
+  props: WithFormikMultiSelectProps<T>
+): JSX.Element {
+  return (
+    <Field {...props}>
+      {(fieldProps: FieldProps) => (
+        <WrappedComponent {...transformFieldToMultiSelectProps({ ...props, ...fieldProps })} />
+      )}
+    </Field>
+  );
+}
+
 /**
  * Higher-Order Component that wraps a MultiSelect component to bind it with Formik.
  *
@@ -282,14 +295,7 @@ export function withFormikMultiSelect<T extends SelectOptionProps>(
 ) {
   // The HOC component that uses Field
   function FormikBoundMultiSelect(props: WithFormikMultiSelectProps<T>): JSX.Element {
-    const FieldToWrappedMultiSelect = (fieldProps: FieldProps): JSX.Element => {
-      const multiSelectProps = transformFieldToMultiSelectProps({
-        ...props,
-        ...fieldProps,
-      });
-      return <WrappedComponent {...multiSelectProps} />;
-    };
-    return <Field {...props} component={FieldToWrappedMultiSelect} />;
+    return renderFormikMultiSelect(WrappedComponent, props);
   }
 
   // Set display name for debugging
@@ -301,13 +307,16 @@ export function withFormikMultiSelect<T extends SelectOptionProps>(
 }
 
 /**
- * MultiSelect component bound to Formik. Built using withFormikMultiSelect HOC.
+ * MultiSelect component bound to Formik.
  * @exports
  * @param {FormikMultiSelectProps<T>} props
  * @returns {JSX.Element}
  */
-export const FormikMultiSelect = <T extends SelectOptionProps = SelectOptionProps>(props: WithFormikMultiSelectProps<T>) =>
-  withFormikMultiSelect<T>(MultiSelect)(props);
+export function FormikMultiSelect<T extends SelectOptionProps = SelectOptionProps>(
+  props: WithFormikMultiSelectProps<T>
+): JSX.Element {
+  return renderFormikMultiSelect<T>(MultiSelect, props);
+}
 
 /**
  * @deprecated Use FormikMultiSelect instead. This alias is provided for backwards compatibility.

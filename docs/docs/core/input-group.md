@@ -6,7 +6,7 @@ sidebar_position: 2
 
 Blueprint [InputGroup](https://blueprintjs.com/docs/#core/components/text-inputs) component controlled and binded to Formik Field component. Holds the same original component properties with extra following properties.
 
-`interface InputGroupProps extends Omit<FieldConfig, 'children'>, Omit<PBInputGroupProps2, 'value' | 'name'>`
+The binding accepts the installed Blueprint InputGroup’s props. Formik supplies its value.
 
 ## Reference
 

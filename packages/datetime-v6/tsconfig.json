@@ -1,0 +1,9 @@
+{
+  "extends": "../datetime/tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "outDir": "dist",
+    "baseUrl": "src"
+  },
+  "include": ["src"]
+}

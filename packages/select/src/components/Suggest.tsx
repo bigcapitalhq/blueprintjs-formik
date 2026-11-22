@@ -243,6 +243,19 @@ export type WithFormikSuggestProps<T> = Omit<
     name: string;
   };
 
+function renderFormikSuggest<T extends SelectOptionProps>(
+  WrappedComponent: ComponentType<SuggestProps<T>>,
+  props: WithFormikSuggestProps<T>
+): JSX.Element {
+  return (
+    <Field {...props}>
+      {(fieldProps: FieldProps) => (
+        <WrappedComponent {...transformFieldToSuggestProps({ ...props, ...fieldProps })} />
+      )}
+    </Field>
+  );
+}
+
 /**
  * Higher-Order Component that wraps a Suggest component to bind it with Formik.
  *
@@ -268,14 +281,7 @@ export function withFormikSuggest<T extends SuggestOptionProps>(
 ) {
   // The HOC component that uses Field
   function FormikBoundSuggest(props: WithFormikSuggestProps<T>): JSX.Element {
-    const FieldToWrappedSuggest = (fieldProps: FieldProps): JSX.Element => {
-      const suggestProps = transformFieldToSuggestProps<T>({
-        ...props,
-        ...fieldProps,
-      });
-      return <WrappedComponent {...suggestProps} />;
-    };
-    return <Field {...props} component={FieldToWrappedSuggest} />;
+    return renderFormikSuggest(WrappedComponent, props);
   }
 
   // Set display name for debugging
@@ -288,12 +294,15 @@ export function withFormikSuggest<T extends SuggestOptionProps>(
 
 /**
  * Suggest component bound to Formik.
- * Built using withFormikSuggest HOC.
  * @exports
  * @param {FormikSuggestProps<T>} props
  * @returns {JSX.Element}
  */
-export const FormikSuggest = <T extends SelectOptionProps = SelectOptionProps>(props: WithFormikSuggestProps<T>) => withFormikSuggest<T>(Suggest)(props);
+export function FormikSuggest<T extends SelectOptionProps = SelectOptionProps>(
+  props: WithFormikSuggestProps<T>
+): JSX.Element {
+  return renderFormikSuggest<T>(Suggest, props);
+}
 
 /**
  * @deprecated Use FormikSuggest instead. This alias is provided for backwards compatibility.

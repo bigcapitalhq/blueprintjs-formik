@@ -1,0 +1,23 @@
+{
+  "name": "@blueprintjs-formik/datetime-v6",
+  "version": "0.1.0",
+  "description": "Formik bindings for Blueprint 6 DateInput and TimezoneSelect",
+  "license": "ISC",
+  "main": "dist/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc && tsc --module esnext --outDir dist/esm --declaration false"
+  },
+  "peerDependencies": {
+    "@blueprintjs-formik/core": "^0.3.8",
+    "@blueprintjs/datetime": "^6.0.0",
+    "formik": "^2.2.9",
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@blueprintjs/datetime": "6.3.4"
+  }
+}
