@@ -2,30 +2,31 @@ import React from 'react';
 import { getIn, FieldProps } from 'formik';
 import {
   InputGroup as BPInputGroup,
-  InputGroupProps2 as PBInputGroupProps2,
   Intent,
 } from '@blueprintjs/core';
 import { Field, FieldBaseProps } from './FieldBase';
 
-interface InputGroupProps
+type BPInputGroupProps = React.ComponentPropsWithoutRef<typeof BPInputGroup>;
+
+export interface InputGroupProps
   extends Omit<FieldBaseProps, 'children' | 'component' | 'as'>,
-  Omit<PBInputGroupProps2, 'value' | 'name'> { }
+  Omit<BPInputGroupProps, 'value' | 'name'> { }
 
 export interface FieldToInputProps
   extends FieldProps,
-  Omit<PBInputGroupProps2, 'form'> { }
+  Omit<BPInputGroupProps, 'form'> { }
 
 /**
  * Transforms field props to input group props.
  * @param   {FieldToInputProps}
- * @returns {PBInputGroupProps2}
+ * @returns {BPInputGroupProps}
  */
 function fieldToInputGroup({
   field: { onBlur: onFieldBlur, ...field },
   form: { touched, errors },
   onBlur,
   ...props
-}: FieldToInputProps): PBInputGroupProps2 {
+}: FieldToInputProps): BPInputGroupProps {
   const fieldError = getIn(errors, field.name);
   const showError = getIn(touched, field.name) && !!fieldError;
 

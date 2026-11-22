@@ -8,7 +8,7 @@ import {
 import { Field, FieldBaseProps } from './FieldBase';
 
 export interface HTMLSelectProps
-  extends Omit<FieldBaseProps, 'children' | 'component' | 'as'>,
+  extends Omit<FieldBaseProps, 'children' | 'component' | 'as' | 'multiple'>,
   BPHTMLSelectProps {
   name: string;
   value?: string | number;
