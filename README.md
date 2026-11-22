@@ -44,6 +44,12 @@ Please see CHANGELOG for more information on what has changed recently.
 
 Please see CONTRIBUTING for details.
 
+## Publishing a release
+
+Add a GitHub Actions repository secret named `NPM_TOKEN` with a granular npm token that has read and write access to the `@blueprintjs-formik` scope and bypass 2FA enabled.
+
+Before tagging a release, update the version of each package you want to publish and commit the corresponding lockfile updates. Publishing the GitHub release builds all workspaces and publishes each version missing from npm. Stable releases use the `latest` npm tag. For a GitHub prerelease, use prerelease package versions such as `0.4.0-rc.1`. The workflow publishes them under `next`.
+
 ---
 
 Made by [Bigcapital.ly](https://bigcapital.ly), [Ahmed Bouhuolia](https://twitter.com)
