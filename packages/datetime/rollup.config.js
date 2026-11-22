@@ -32,6 +32,7 @@ const config = [
       format: 'es',
       sourcemap: true,
       preserveModules: true,
+      preserveModulesRoot: 'src',
     },
   },
 ];
