@@ -1,5 +1,5 @@
 import React from 'react';
-import { FieldMetaProps, FieldInputProps, FormikProps } from 'formik';
+import type { FieldProps } from 'formik';
 import {
   FormGroup as BPFormGroup,
   Intent,
@@ -12,32 +12,25 @@ export interface FormGroupProps extends BPFormGroupProps, Pick<FieldBaseProps, '
   children: React.ReactElement;
 }
 
-interface FieldToFormGroupProps extends Omit<FormGroupProps, 'fastField'> {
-  field: FieldInputProps<any>;
-  meta: FieldMetaProps<any>;
-  form: FormikProps<any>;
-}
+interface FieldToFormGroupProps
+  extends Omit<FormGroupProps, 'fastField' | 'name'>,
+    Pick<FieldProps, 'field' | 'form'> {}
 
-const fieldToFormGroup = (
-  props: Omit<FormGroupProps, 'children'>,
-  field: FieldInputProps<any>,
-  meta: FieldMetaProps<any>
-): BPFormGroupProps => {
-  const showError = meta.touched && meta.error;
+const FieldToFormGroup = ({ field, form, children, ...props }: FieldToFormGroupProps) => {
+  const { touched, error } = form.getFieldMeta(field.name);
+  const showError = touched && !!error;
 
-  return {
-    labelFor: field.name,
-    intent: showError ? Intent.DANGER : Intent.NONE,
-    helperText: showError ? meta.error : '',
-    ...props,
-  };
+  return (
+    <BPFormGroup
+      labelFor={field.name}
+      intent={showError ? Intent.DANGER : Intent.NONE}
+      helperText={showError ? error : ''}
+      {...props}
+    >
+      {children}
+    </BPFormGroup>
+  );
 };
-
-const FieldToFormGroup = ({ field, meta, form, children, ...props }: FieldToFormGroupProps) => (
-  <BPFormGroup {...fieldToFormGroup(props, field, meta)}>
-    {children}
-  </BPFormGroup>
-);
 
 /**
  * Form group.
